@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+
+node_modules/
+npm-debug.log*
+
+data/submissions/
+data/*.json
+
+.DS_Store
+
+PE_Planejamento_Estrategico_Totall_HUB_CFO.pptx

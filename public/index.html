@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Prova Online SDR - Totall Propriedade Intelectual</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#candidateName" aria-label="Totall Propriedade Intelectual">
+        <img src="/totall-logo.png" alt="Totall Propriedade Intelectual" />
+      </a>
+      <div class="exam-meta">
+        <span>Prova online</span>
+        <strong>Conhecimentos SDR</strong>
+      </div>
+    </header>
+
+    <main>
+      <section class="intro">
+        <div class="intro-copy">
+          <p class="eyebrow">Selecao comercial</p>
+          <h1>Prova de Conhecimentos SDR</h1>
+          <p>
+            Avaliacao online para medir criterio comercial, qualidade de qualificacao,
+            raciocinio de prospeccao e dominio da rotina de SDR.
+          </p>
+        </div>
+
+        <form class="candidate-card" id="candidateForm">
+          <label>
+            Nome do candidato
+            <input id="candidateName" name="candidateName" autocomplete="name" required />
+          </label>
+          <label>
+            Email do candidato para copia
+            <input
+              id="resultEmail"
+              name="resultEmail"
+              type="email"
+              autocomplete="email"
+              placeholder="Opcional"
+            />
+          </label>
+          <label>
+            Data
+            <input id="examDate" name="examDate" type="date" required />
+          </label>
+          <label>
+            Avaliador
+            <input id="reviewerName" name="reviewerName" placeholder="Opcional" />
+          </label>
+        </form>
+      </section>
+
+      <section class="exam-shell" aria-label="Prova de conhecimentos">
+        <aside class="sidebar">
+          <div class="score-panel">
+            <p class="eyebrow">Andamento</p>
+            <strong id="answeredCount">0/15</strong>
+            <div class="progress-track" aria-hidden="true">
+              <div id="progressBar"></div>
+            </div>
+            <span id="progressLabel">Comece pela identificacao do candidato.</span>
+          </div>
+
+          <div class="rubric">
+            <h2>Rubrica</h2>
+            <ul>
+              <li>Diagnostico antes de oferta.</li>
+              <li>Qualificacao com decisor, dor, momento e proximo passo.</li>
+              <li>Cadencia estruturada e registro claro no CRM.</li>
+              <li>Personalizacao com pesquisa minima sobre o prospect.</li>
+            </ul>
+          </div>
+        </aside>
+
+        <form class="question-list" id="examForm">
+          <div id="questions"></div>
+
+          <section class="result-card" id="resultCard" hidden>
+            <p class="eyebrow">Resultado automatico</p>
+            <h2 id="resultTitle">Resultado</h2>
+            <div class="result-grid">
+              <div>
+                <span>Questoes fechadas</span>
+                <strong id="closedScore">0/7</strong>
+              </div>
+              <div>
+                <span>Aproveitamento</span>
+                <strong id="closedRate">0%</strong>
+              </div>
+              <div>
+                <span>Abertas preenchidas</span>
+                <strong id="openCompletion">0/8</strong>
+              </div>
+            </div>
+            <p id="resultFeedback"></p>
+            <div class="email-status" id="emailStatus">
+              <strong>Envio automatico</strong>
+              <span>Ao finalizar, o resultado e enviado para Rodrigo e fica registrado no servidor.</span>
+            </div>
+          </section>
+
+          <p class="finish-status" id="finishStatus" role="status"></p>
+
+          <div class="action-bar">
+            <button class="secondary" type="button" id="clearButton">Limpar</button>
+            <button class="secondary" type="button" id="copyButton">Copiar resultado</button>
+            <button class="secondary" type="button" id="emailButton">Enviar por email</button>
+            <button class="secondary" type="button" id="printButton">Imprimir</button>
+            <button class="primary" type="submit">Finalizar prova</button>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "prova-sdr",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Prova online SDR da Totall com registro e envio automatico de resultados.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check server.js && node --check public/app.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
