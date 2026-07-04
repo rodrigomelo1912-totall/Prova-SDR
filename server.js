@@ -25,6 +25,15 @@ const server = http.createServer(async (request, response) => {
   try {
     const url = new URL(request.url, `http://${request.headers.host}`);
 
+    if (url.pathname === "/health") {
+      sendJson(response, 200, {
+        ok: true,
+        service: "prova-sdr",
+        checkedAt: new Date().toISOString(),
+      });
+      return;
+    }
+
     if (url.pathname === "/api/results" && request.method === "POST") {
       const submission = await receiveResultSubmission(request);
       sendJson(response, 200, submission);

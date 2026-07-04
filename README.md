@@ -60,3 +60,29 @@ Opcoes recomendadas:
 - Azure App Service
 
 O arquivo `render.yaml` ja deixa o deploy no Render preparado.
+
+### Render
+
+1. Acesse `https://dashboard.render.com/`.
+2. Conecte a conta GitHub.
+3. Crie um novo Blueprint ou Web Service apontando para `rodrigomelo1912-totall/Prova-SDR`.
+4. Configure as variaveis sensiveis:
+   - `MS_GRAPH_TENANT_ID`
+   - `MS_GRAPH_CLIENT_ID`
+   - `MS_GRAPH_CLIENT_SECRET`
+5. Faça o deploy.
+
+### Docker
+
+```bash
+docker build -t prova-sdr .
+docker run --env-file .env -p 3000:3000 prova-sdr
+```
+
+### Healthcheck
+
+```text
+/health
+```
+
+Retorna um JSON simples confirmando que o servico esta online.
