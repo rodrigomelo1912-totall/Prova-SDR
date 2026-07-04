@@ -18,6 +18,13 @@ const questions = [
     type: "open",
     title: "Explique, com suas palavras, qual e a diferenca entre gerar uma reuniao e gerar uma reuniao qualificada.",
     guidance: "Procure sinais de criterio: fit, contexto, dor, decisor, momento e proximo passo claro.",
+    rubric: [
+      ["Diferencia volume de qualidade", ["qualificada", "qualidade", "relevante", "aderente"]],
+      ["Considera fit ou perfil do cliente", ["fit", "perfil", "cliente ideal", "aderencia", "segmento"]],
+      ["Investiga dor, desafio ou necessidade", ["dor", "desafio", "problema", "necessidade", "demanda"]],
+      ["Valida decisor ou processo decisorio", ["decisor", "decisao", "autoridade", "responsavel", "quem decide"]],
+      ["Define contexto e proximo passo", ["contexto", "momento", "proximo passo", "reuniao com pauta", "objetivo"]],
+    ],
   },
   {
     id: 3,
@@ -38,6 +45,13 @@ const questions = [
     title:
       "Imagine que voce esta conversando com um empresario que diz: \"Ja temos uma empresa que cuida das nossas marcas.\" Como voce conduziria a conversa a partir dessa resposta?",
     guidance: "Boa resposta reconhece o cenario, aprofunda satisfacao, riscos, prazos, carteira e abertura para benchmark.",
+    rubric: [
+      ["Reconhece a situacao sem confronto", ["entendo", "otimo", "perfeito", "legal", "bom saber"]],
+      ["Pergunta sobre satisfacao atual", ["satisfeito", "satisfacao", "experiencia", "atendimento", "como tem sido"]],
+      ["Aprofunda riscos, prazos ou carteira", ["risco", "prazo", "vencimento", "registro", "carteira", "marca"]],
+      ["Busca oportunidade de benchmark", ["comparar", "benchmark", "segunda opiniao", "avaliar", "diagnostico"]],
+      ["Termina com pergunta consultiva", ["como", "qual", "quando", "posso", "?"]],
+    ],
   },
   {
     id: 5,
@@ -57,6 +71,13 @@ const questions = [
     title:
       "Voce recebeu uma lista com 50 empresas para prospectar. Explique como organizaria sua abordagem e sua rotina de contato durante a semana.",
     guidance: "Avalie priorizacao, pesquisa rapida, cadencia multicanal, blocos de foco e controle de follow-up.",
+    rubric: [
+      ["Prioriza ou segmenta a lista", ["priorizar", "segmentar", "ranking", "porte", "potencial", "perfil"]],
+      ["Faz pesquisa antes do contato", ["pesquisa", "linkedin", "site", "marca", "noticia", "informacao"]],
+      ["Usa cadencia estruturada", ["cadencia", "tentativas", "follow-up", "sequencia", "rotina"]],
+      ["Combina canais de contato", ["telefone", "whatsapp", "email", "linkedin", "ligacao"]],
+      ["Registra e controla no CRM", ["crm", "registrar", "controle", "historico", "status"]],
+    ],
   },
   {
     id: 7,
@@ -75,6 +96,13 @@ const questions = [
     type: "open",
     title: "Na sua opiniao, quais informacoes minimas um SDR precisa descobrir antes de passar uma oportunidade para o closer?",
     guidance: "Inclui fit, dor, impacto, autoridade, prazo, urgencia, objecoes e expectativa da reuniao.",
+    rubric: [
+      ["Confirma fit da oportunidade", ["fit", "perfil", "segmento", "tamanho", "aderencia"]],
+      ["Mapeia dor e impacto", ["dor", "impacto", "problema", "necessidade", "consequencia"]],
+      ["Identifica decisor ou processo", ["decisor", "decisao", "autoridade", "responsavel", "processo"]],
+      ["Entende momento, prazo ou urgencia", ["momento", "prazo", "urgencia", "prioridade", "quando"]],
+      ["Registra objeções e proximos passos", ["objecao", "obstaculo", "proximo passo", "reuniao", "expectativa"]],
+    ],
   },
   {
     id: 9,
@@ -94,6 +122,13 @@ const questions = [
     title:
       "Voce conseguiu falar com o proprietario de uma empresa. Ele diz: \"Tenho interesse, mas agora estou sem tempo. Me liga daqui a tres meses.\" Como voce responderia e quais informacoes tentaria descobrir antes de encerrar a conversa?",
     guidance: "Procure combinacao de respeito ao timing, micropergunta de diagnostico e agendamento de retorno com contexto.",
+    rubric: [
+      ["Respeita o timing do prospect", ["entendo", "sem problema", "respeito", "claro", "combinado"]],
+      ["Investiga motivo ou prioridade", ["motivo", "prioridade", "por que", "o que muda", "acontecendo"]],
+      ["Busca diagnostico antes de encerrar", ["pergunta", "entender", "diagnostico", "contexto", "desafio"]],
+      ["Agenda retorno concreto", ["agendar", "marcar", "data", "retorno", "calendario", "tres meses"]],
+      ["Mantem valor ou proximo passo leve", ["enviar", "material", "conteudo", "preparar", "ajudar"]],
+    ],
   },
   {
     id: 11,
@@ -113,6 +148,13 @@ const questions = [
     title:
       "Explique o que significa personalizar uma prospeccao. De um exemplo de abordagem personalizada para uma empresa que voce pesquisou antes do contato.",
     guidance: "Boa resposta usa evidencia real da empresa e conecta essa evidencia a uma pergunta relevante.",
+    rubric: [
+      ["Define personalizacao com clareza", ["personalizar", "especifico", "contexto", "nao generico", "relevante"]],
+      ["Usa pesquisa concreta da empresa", ["pesquisei", "site", "linkedin", "noticia", "mercado", "marca"]],
+      ["Conecta pesquisa a hipotese de dor", ["dor", "hipotese", "desafio", "risco", "oportunidade"]],
+      ["Evita apresentacao longa", ["breve", "objetivo", "curto", "sem apresentar", "sem vender"]],
+      ["Termina com pergunta aberta", ["como", "qual", "quando", "faz sentido", "?"]],
+    ],
   },
   {
     id: 13,
@@ -132,6 +174,13 @@ const questions = [
     title:
       "Um SDR agendou 30 reunioes no mes. Outro SDR agendou 18. O primeiro teve 8 reunioes realizadas e 2 oportunidades reais. O segundo teve 15 reunioes realizadas e 10 oportunidades reais. Quem teve o melhor desempenho? Justifique sua resposta.",
     guidance: "Resposta forte valoriza conversao, qualidade e oportunidades reais em vez de volume bruto.",
+    rubric: [
+      ["Identifica o segundo SDR como melhor", ["segundo", "18", "15", "10"]],
+      ["Valoriza oportunidades reais", ["oportunidades reais", "oportunidade", "qualidade", "avancam"]],
+      ["Compara conversao e nao so volume", ["conversao", "taxa", "percentual", "volume", "quantidade"]],
+      ["Usa os numeros do caso", ["30", "18", "8", "2", "15", "10"]],
+      ["Justifica com raciocinio de funil", ["funil", "realizadas", "qualificadas", "eficiencia", "desempenho"]],
+    ],
   },
   {
     id: 15,
@@ -139,6 +188,13 @@ const questions = [
     title:
       "Construa uma abordagem inicial de prospeccao para um potencial cliente da Totall. A mensagem deve demonstrar pesquisa minima, gerar curiosidade, evitar apresentacao longa e terminar com uma pergunta que incentive a continuidade.",
     guidance: "Avalie especificidade, clareza, brevidade, tom consultivo e pergunta final aberta.",
+    rubric: [
+      ["Demonstra pesquisa minima", ["vi que", "notei", "pesquisei", "site", "linkedin", "marca"]],
+      ["Gera curiosidade", ["curiosidade", "percebi", "ponto", "oportunidade", "risco"]],
+      ["Mantem mensagem breve", ["breve", "rapido", "objetivo", "curto"]],
+      ["Usa tom consultivo", ["entender", "ajudar", "avaliar", "diagnostico", "conversar"]],
+      ["Termina com pergunta de continuidade", ["podemos", "faz sentido", "como", "qual", "?"]],
+    ],
   },
 ];
 
@@ -236,6 +292,7 @@ function calculateResult() {
   const open = questions.filter((question) => question.type === "open");
   const correctClosed = closed.filter((question) => Number(form.get(`q${question.id}`)) === question.answer).length;
   const completedOpen = open.filter((question) => String(form.get(`q${question.id}`) || "").trim().length >= 20).length;
+  const openEvaluation = evaluateOpenAnswers(form);
   const closedRate = Math.round((correctClosed / closed.length) * 100);
 
   return {
@@ -244,6 +301,7 @@ function calculateResult() {
     completedOpen,
     openTotal: open.length,
     closedRate,
+    openEvaluation,
   };
 }
 
@@ -253,18 +311,87 @@ function renderResult(result, submission) {
   document.getElementById("closedScore").textContent = `${result.correctClosed}/${result.closedTotal}`;
   document.getElementById("closedRate").textContent = `${result.closedRate}%`;
   document.getElementById("openCompletion").textContent = `${result.completedOpen}/${result.openTotal}`;
+  document.getElementById("openScore").textContent = `${result.openEvaluation.rate}%`;
 
-  const title = result.closedRate >= 85 ? "Excelente criterio tecnico" : result.closedRate >= 70 ? "Bom desempenho" : "Revisao recomendada";
+  const combinedRate = Math.round((result.closedRate + result.openEvaluation.rate) / 2);
+  const title = combinedRate >= 85 ? "Excelente criterio tecnico" : combinedRate >= 70 ? "Bom desempenho" : "Revisao recomendada";
   const feedback =
-    result.closedRate >= 85
-      ? "As respostas fechadas indicam boa leitura do papel de SDR. Use a rubrica para validar profundidade nas respostas abertas."
-      : result.closedRate >= 70
-        ? "O resultado automatico e positivo, mas vale observar consistencia nas situacoes praticas antes da decisao final."
+    combinedRate >= 85
+      ? "O conjunto de respostas indica boa leitura do papel de SDR, com criterios de qualificacao e raciocinio comercial consistentes."
+      : combinedRate >= 70
+        ? "O resultado automatico e positivo, mas vale revisar os pontos fracos das respostas abertas antes da decisao final."
         : "O candidato precisa demonstrar mais dominio em qualificacao, descoberta e criterios de passagem para o closer.";
 
   document.getElementById("resultTitle").textContent = title;
   document.getElementById("resultFeedback").textContent = feedback;
+  renderOpenEvaluation(result.openEvaluation);
   renderSubmissionStatus(submission);
+}
+
+function evaluateOpenAnswers(form) {
+  const items = questions
+    .filter((question) => question.type === "open")
+    .map((question) => evaluateOpenQuestion(question, String(form.get(`q${question.id}`) || "")));
+  const score = items.reduce((total, item) => total + item.score, 0);
+  const total = items.reduce((sum, item) => sum + item.total, 0);
+
+  return {
+    score,
+    total,
+    rate: total ? Math.round((score / total) * 100) : 0,
+    items,
+  };
+}
+
+function evaluateOpenQuestion(question, answer) {
+  const normalized = normalizeText(answer);
+  const wordCount = normalized.split(/\s+/).filter(Boolean).length;
+  const matched = (question.rubric || []).filter((criterion) =>
+    criterion[1].some((term) => normalized.includes(normalizeText(term)))
+  );
+  let score = matched.length * 2;
+
+  if (wordCount < 12) score = 0;
+  else if (wordCount < 25) score = Math.min(score, 4);
+
+  return {
+    id: question.id,
+    score,
+    total: (question.rubric || []).length * 2,
+    rate: question.rubric?.length ? Math.round((score / ((question.rubric || []).length * 2)) * 100) : 0,
+    wordCount,
+    strengths: matched.map((criterion) => criterion[0]),
+    missing: (question.rubric || [])
+      .filter((criterion) => !matched.includes(criterion))
+      .map((criterion) => criterion[0]),
+  };
+}
+
+function renderOpenEvaluation(openEvaluation) {
+  document.getElementById("openEvaluation").innerHTML = `
+    <h3>Avaliacao das respostas abertas</h3>
+    <div class="open-evaluation-grid">
+      ${openEvaluation.items
+        .map(
+          (item) => `
+            <div class="open-evaluation-item">
+              <div>
+                <strong>Questao ${item.id}</strong>
+                <span>${item.score}/${item.total} pontos</span>
+              </div>
+              <p>${escapeHtml(openEvaluationFeedback(item))}</p>
+            </div>
+          `
+        )
+        .join("")}
+    </div>
+  `;
+}
+
+function openEvaluationFeedback(item) {
+  if (item.rate >= 80) return `Resposta forte. Cobre: ${item.strengths.join(", ")}.`;
+  if (item.rate >= 50) return `Resposta razoavel. Reforcar: ${item.missing.slice(0, 2).join(", ")}.`;
+  return `Resposta fraca ou generica. Faltou: ${item.missing.slice(0, 3).join(", ")}.`;
 }
 
 function updateProgress() {
@@ -337,6 +464,12 @@ function buildResultText() {
     `Avaliador: ${reviewer}`,
     `Fechadas: ${result.correctClosed}/${result.closedTotal} (${result.closedRate}%)`,
     `Abertas preenchidas: ${result.completedOpen}/${result.openTotal}`,
+    `Avaliacao abertas: ${result.openEvaluation.score}/${result.openEvaluation.total} (${result.openEvaluation.rate}%)`,
+    "",
+    "Resumo das abertas:",
+    ...result.openEvaluation.items.map(
+      (item) => `Questao ${item.id}: ${item.score}/${item.total} - ${openEvaluationFeedback(item)}`
+    ),
     "",
     answers,
   ].join("\n");
@@ -361,7 +494,8 @@ function buildSubmissionPayload(result) {
   const candidateEmail = document.getElementById("resultEmail").value.trim();
   const date = document.getElementById("examDate").value;
   const reviewer = document.getElementById("reviewerName").value.trim();
-  const title = result.closedRate >= 85 ? "Excelente criterio tecnico" : result.closedRate >= 70 ? "Bom desempenho" : "Revisao recomendada";
+  const combinedRate = Math.round((result.closedRate + result.openEvaluation.rate) / 2);
+  const title = combinedRate >= 85 ? "Excelente criterio tecnico" : combinedRate >= 70 ? "Bom desempenho" : "Revisao recomendada";
 
   return {
     ownerEmail,
@@ -386,6 +520,10 @@ function buildSubmissionPayload(result) {
         selectedText: question.type === "closed" ? question.options[Number(value)] || "" : "",
         correct: question.type === "closed" ? Number(value) === question.answer : null,
         answer: question.type === "open" ? String(value || "").trim() : "",
+        evaluation:
+          question.type === "open"
+            ? result.openEvaluation.items.find((item) => item.id === question.id) || null
+            : null,
       };
     }),
   };
@@ -452,6 +590,7 @@ function buildEmailText() {
     `Resultado: ${title}`,
     `Questoes fechadas: ${result.correctClosed}/${result.closedTotal} (${result.closedRate}%)`,
     `Abertas preenchidas: ${result.completedOpen}/${result.openTotal}`,
+    `Avaliacao abertas: ${result.openEvaluation.score}/${result.openEvaluation.total} (${result.openEvaluation.rate}%)`,
     "",
     feedback,
     "",
@@ -485,4 +624,14 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+function normalizeText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\w\s?]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }

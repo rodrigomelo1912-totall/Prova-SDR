@@ -337,7 +337,7 @@ textarea:focus {
 
 .result-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
   margin-bottom: 16px;
 }
@@ -366,6 +366,51 @@ textarea:focus {
 #resultFeedback {
   color: var(--muted);
   line-height: 1.55;
+}
+
+.open-evaluation {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.open-evaluation h3 {
+  margin: 0;
+  color: var(--brand);
+  font-size: 18px;
+}
+
+.open-evaluation-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.open-evaluation-item {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-2);
+}
+
+.open-evaluation-item div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.open-evaluation-item strong {
+  color: var(--brand);
+  font-size: 14px;
+}
+
+.open-evaluation-item span,
+.open-evaluation-item p {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.4;
 }
 
 .email-status {
@@ -467,7 +512,8 @@ button {
   }
 
   .sidebar,
-  .result-grid {
+  .result-grid,
+  .open-evaluation-grid {
     grid-template-columns: 1fr;
   }
 

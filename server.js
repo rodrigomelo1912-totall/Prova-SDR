@@ -286,7 +286,10 @@ function buildOwnerEmailText(submission) {
   const answers = submission.answers
     .map((answer) => {
       const value = answer.type === "closed" ? `${answer.selectedLabel}) ${answer.selectedText}` : answer.answer;
-      return `${answer.id}. ${value}`;
+      const evaluation = answer.evaluation
+        ? `\n   Avaliacao aberta: ${answer.evaluation.score}/${answer.evaluation.total} - ${openEvaluationFeedback(answer.evaluation)}`
+        : "";
+      return `${answer.id}. ${value}${evaluation}`;
     })
     .join("\n\n");
 
@@ -303,10 +306,21 @@ function buildOwnerEmailText(submission) {
     `Resultado: ${submission.exam.title}`,
     `Questoes fechadas: ${result.correctClosed}/${result.closedTotal} (${result.closedRate}%)`,
     `Abertas preenchidas: ${result.completedOpen}/${result.openTotal}`,
+    result.openEvaluation
+      ? `Avaliacao abertas: ${result.openEvaluation.score}/${result.openEvaluation.total} (${result.openEvaluation.rate}%)`
+      : "",
     "",
     "Respostas:",
     answers,
-  ].join("\n");
+  ]
+    .filter((line) => line !== "")
+    .join("\n");
+}
+
+function openEvaluationFeedback(item) {
+  if (item.rate >= 80) return `Resposta forte. Cobre: ${(item.strengths || []).join(", ")}.`;
+  if (item.rate >= 50) return `Resposta razoavel. Reforcar: ${(item.missing || []).slice(0, 2).join(", ")}.`;
+  return `Resposta fraca ou generica. Faltou: ${(item.missing || []).slice(0, 3).join(", ")}.`;
 }
 
 function loadDotEnv(filePath) {
