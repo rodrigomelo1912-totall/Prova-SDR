@@ -273,7 +273,7 @@ async function handleSubmit(event) {
     const submission = await submitResultToOwner(result);
     state.submitted = true;
     state.submission = submission;
-    renderResult(result, submission);
+    renderResult(submission.result || result, submission);
     updateProgress();
     setFinishStatus("");
     document.getElementById("resultCard").scrollIntoView({ behavior: "smooth", block: "center" });
@@ -368,8 +368,9 @@ function evaluateOpenQuestion(question, answer) {
 }
 
 function renderOpenEvaluation(openEvaluation) {
+  const label = openEvaluation.mode === "ai" ? "IA" : "rubrica automatica";
   document.getElementById("openEvaluation").innerHTML = `
-    <h3>Avaliacao das respostas abertas</h3>
+    <h3>Avaliacao das respostas abertas (${label})</h3>
     <div class="open-evaluation-grid">
       ${openEvaluation.items
         .map(
@@ -389,6 +390,7 @@ function renderOpenEvaluation(openEvaluation) {
 }
 
 function openEvaluationFeedback(item) {
+  if (item.feedback) return item.feedback;
   if (item.rate >= 80) return `Resposta forte. Cobre: ${item.strengths.join(", ")}.`;
   if (item.rate >= 50) return `Resposta razoavel. Reforcar: ${item.missing.slice(0, 2).join(", ")}.`;
   return `Resposta fraca ou generica. Faltou: ${item.missing.slice(0, 3).join(", ")}.`;

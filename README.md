@@ -4,6 +4,8 @@ Prova online de conhecimentos SDR da Totall Propriedade Intelectual.
 
 O app coleta as respostas, calcula automaticamente as questoes fechadas, registra a submissao no servidor e envia o resultado para Rodrigo via email quando o Microsoft Graph/Exchange estiver configurado.
 
+As questoes abertas podem ser avaliadas por IA usando OpenAI. Quando `OPENAI_API_KEY` nao estiver configurada, o app usa uma rubrica automatica local como fallback.
+
 ## Rodar localmente
 
 ```bash
@@ -27,9 +29,24 @@ MS_GRAPH_TENANT_ID=
 MS_GRAPH_CLIENT_ID=
 MS_GRAPH_CLIENT_SECRET=
 MS_GRAPH_SENDER=rodrigo.melo@totallpi.co
+
+OPENAI_API_KEY=
+OPENAI_MODEL=gpt-5.5-mini
 ```
 
 Sem Microsoft Graph configurado, o app salva as provas em `data/submissions/` e libera o resultado com um protocolo local.
+
+Sem `OPENAI_API_KEY`, a avaliacao das questoes abertas usa a rubrica local.
+
+## Avaliacao por IA
+
+Para apurar as questoes abertas com IA:
+
+1. Crie uma chave de API da OpenAI.
+2. Configure `OPENAI_API_KEY` no ambiente de producao.
+3. Opcionalmente ajuste `OPENAI_MODEL`.
+
+O servidor envia apenas as perguntas abertas e respostas para a API e espera uma resposta estruturada com nota, pontos fortes, lacunas e feedback por questao.
 
 ## Envio automatico por Microsoft Exchange
 
