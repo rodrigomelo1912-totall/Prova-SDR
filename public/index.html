@@ -21,10 +21,10 @@
       <section class="intro">
         <div class="intro-copy">
           <p class="eyebrow">Selecao comercial</p>
-          <h1>Prova de Conhecimentos SDR</h1>
+          <h1>Avaliacao de Calibracao SDR</h1>
           <p>
-            Avaliacao online para medir criterio comercial, qualidade de qualificacao,
-            raciocinio de prospeccao e dominio da rotina de SDR.
+            Avaliacao online para calibrar recepcao de inbound, qualificacao, leitura de
+            oportunidades em PI, rotina de CRM e passagem para closer.
           </p>
         </div>
 
@@ -58,7 +58,7 @@
         <aside class="sidebar">
           <div class="score-panel">
             <p class="eyebrow">Andamento</p>
-            <strong id="answeredCount">0/15</strong>
+            <strong id="answeredCount">0/22</strong>
             <div class="progress-track" aria-hidden="true">
               <div id="progressBar"></div>
             </div>
@@ -68,15 +68,23 @@
           <div class="rubric">
             <h2>Rubrica</h2>
             <ul>
-              <li>Diagnostico antes de oferta.</li>
-              <li>Qualificacao com decisor, dor, momento e proximo passo.</li>
-              <li>Cadencia estruturada e registro claro no CRM.</li>
-              <li>Personalizacao com pesquisa minima sobre o prospect.</li>
+              <li>Recepcao consultiva antes de falar preco.</li>
+              <li>Qualificacao com contexto, urgencia, decisor e proximo passo.</li>
+              <li>Leitura de oportunidades em marca, software e demandas adjacentes.</li>
+              <li>Registro claro no CRM e passagem de bastao util ao closer.</li>
             </ul>
           </div>
         </aside>
 
         <form class="question-list" id="examForm">
+          <nav class="section-tabs" id="sectionTabs" aria-label="Blocos da prova"></nav>
+
+          <section class="section-panel">
+            <p class="eyebrow" id="sectionEyebrow">Bloco 1</p>
+            <h2 id="sectionTitle">Recepcao e qualificacao de leads</h2>
+            <p id="sectionDescription"></p>
+          </section>
+
           <div id="questions"></div>
 
           <section class="result-card" id="resultCard" hidden>
@@ -115,7 +123,8 @@
             <button class="secondary" type="button" id="copyButton">Copiar resultado</button>
             <button class="secondary" type="button" id="emailButton">Enviar por email</button>
             <button class="secondary" type="button" id="printButton">Imprimir</button>
-            <button class="primary" type="submit">Finalizar prova</button>
+            <button class="secondary" type="button" id="previousSectionButton">Voltar bloco</button>
+            <button class="primary" type="button" id="sectionActionButton">Finalizar bloco e avancar</button>
           </div>
         </form>
       </section>

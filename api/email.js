@@ -82,7 +82,7 @@ async function sendWithMicrosoftGraph(submission, env = process.env) {
     },
     body: JSON.stringify({
       message: {
-        subject: `Resultado da prova SDR - ${submission.candidate.name}`,
+        subject: `Resultado da avaliacao SDR - ${submission.candidate.name}`,
         body: {
           contentType: "Text",
           content: buildOwnerEmailText(submission),
@@ -134,7 +134,7 @@ async function getMicrosoftGraphToken(env = process.env) {
 }
 
 async function sendWithResend(submission, env = process.env) {
-  const from = env.RESULT_FROM_EMAIL || "Totall Prova SDR <onboarding@resend.dev>";
+  const from = env.RESULT_FROM_EMAIL || "Totall Avaliacao SDR <onboarding@resend.dev>";
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
@@ -144,7 +144,7 @@ async function sendWithResend(submission, env = process.env) {
     body: JSON.stringify({
       from,
       to: [submission.recipient],
-      subject: `Resultado da prova SDR - ${submission.candidate.name}`,
+      subject: `Resultado da avaliacao SDR - ${submission.candidate.name}`,
       text: buildOwnerEmailText(submission),
     }),
   });
@@ -184,7 +184,10 @@ function buildOwnerEmailText(submission) {
   const result = submission.exam.result;
   const answers = submission.answers
     .map((answer) => {
-      const value = answer.type === "closed" ? `${answer.selectedLabel}) ${answer.selectedText}` : answer.answer;
+      const value =
+        answer.type === "closed" || answer.type === "diagnostic"
+          ? `${answer.selectedLabel}) ${answer.selectedText}${answer.answer ? ` | ${answer.answer}` : ""}`
+          : answer.answer;
       const evaluation = answer.evaluation
         ? `\n   Avaliacao aberta: ${answer.evaluation.score}/${answer.evaluation.total} - ${openEvaluationFeedback(answer.evaluation)}`
         : "";
@@ -193,7 +196,7 @@ function buildOwnerEmailText(submission) {
     .join("\n\n");
 
   return [
-    "Prova de Conhecimentos SDR - Totall",
+    "Avaliacao de Calibracao SDR - Totall",
     "",
     `Protocolo: ${submission.id}`,
     `Recebido em: ${submission.receivedAt}`,

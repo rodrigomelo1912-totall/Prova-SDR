@@ -1,248 +1,394 @@
 "use strict";
 
-const questions = [
+const sections = [
   {
     id: 1,
-    type: "closed",
-    title: "Qual e o principal papel de um SDR dentro de uma operacao comercial?",
-    options: [
-      "Elaborar propostas e contratos",
-      "Prospectar, conectar, investigar e qualificar oportunidades",
-      "Negociar descontos e condicoes comerciais",
-      "Realizar o pos-venda dos clientes",
+    title: "Recepcao e qualificacao de leads",
+    shortTitle: "Bloco 1",
+    description: "Leitura inicial do inbound, urgencia, decisao, contexto e primeiras perguntas de qualificacao.",
+    questions: [
+      {
+        id: 1,
+        type: "closed",
+        title: 'Um lead chega pelo formulario dizendo: "Quero registrar minha marca. Qual o valor?" Qual deve ser a primeira leitura do SDR?',
+        options: [
+          "E um lead quente e deve ser enviado imediatamente ao closer.",
+          "E uma oportunidade clara de marca, bastando informar o preco.",
+          "Existe intencao inicial, mas ainda e necessario entender contexto, urgencia, situacao da marca, perfil da empresa e processo de decisao.",
+          "E um lead pouco qualificado porque perguntou preco antes de explicar o problema.",
+        ],
+        answer: 2,
+      },
+      {
+        id: 2,
+        type: "closed",
+        title:
+          "Um lead inbound respondeu rapido, demonstrou simpatia e aceitou reuniao. Porem, o SDR nao sabe se ele e decisor, se a marca ja esta em uso, se ha urgencia ou se existe orcamento. Qual alternativa e mais correta?",
+        options: [
+          "A reuniao deve ser passada ao closer porque o lead aceitou conversar.",
+          "O SDR deve barrar a reuniao ate descobrir todos os detalhes possiveis.",
+          "O SDR deve confirmar elementos minimos de qualificacao antes da passagem, sem transformar a conversa em interrogatorio.",
+          "O closer deve fazer toda a qualificacao, pois o papel do SDR e apenas agendar.",
+        ],
+        answer: 2,
+      },
+      {
+        id: 3,
+        type: "closed",
+        title: 'O lead diz: "Estou so pesquisando por enquanto." Qual pergunta e mais madura?',
+        options: [
+          "Entao posso te retornar daqui a alguns meses?",
+          "Voce ja tem alguma previsao de quando pretende registrar?",
+          "O que motivou essa pesquisa agora?",
+          "Se eu te passar uma condicao especial, voce avanca?",
+        ],
+        answer: 2,
+      },
+      {
+        id: 4,
+        type: "closed",
+        title: "Um lead quer registrar uma marca, mas informa que ainda nao abriu CNPJ. Qual conduta e mais adequada?",
+        options: [
+          "Desqualificar o lead, pois sem CNPJ nao existe oportunidade.",
+          "Explicar que so e possivel registrar marca com CNPJ.",
+          "Entender o estagio do projeto, uso da marca, previsao de formalizacao, segmento e intencao comercial antes de direcionar.",
+          "Passar diretamente para o closer, pois toda duvida juridica deve ir para especialista.",
+        ],
+        answer: 2,
+      },
+      {
+        id: 5,
+        type: "closed",
+        title: 'Um lead diz: "Preciso registrar minha marca com urgencia porque recebi uma notificacao." Qual e a melhor conduta?',
+        options: [
+          "Tratar como oportunidade urgente, coletar informacoes essenciais e direcionar com prioridade ao especialista/closer adequado.",
+          "Informar o valor do registro e tentar fechar rapidamente.",
+          "Explicar que notificacao nao tem relacao direta com registro de marca.",
+          "Pedir que ele envie tudo por e-mail e aguarde retorno.",
+        ],
+        answer: 0,
+      },
+      {
+        id: 6,
+        type: "open",
+        title: 'Um lead chega dizendo: "Quero registrar minha marca." Liste as informacoes minimas que voce precisa descobrir antes de direcionar esse lead ao closer.',
+        guidance: "Busque sinais de marca, uso, titularidade, segmento, urgencia, decisor, contexto e proximo passo.",
+        rubric: [
+          ["Marca e uso atual", ["marca", "uso", "utiliza", "nome", "produto", "servico"]],
+          ["Titularidade e empresa", ["cnpj", "cpf", "titular", "empresa", "socio", "proprietario"]],
+          ["Segmento e atividade", ["segmento", "atividade", "mercado", "ramo", "atua"]],
+          ["Urgencia, risco ou prazo", ["urgencia", "prazo", "notificacao", "risco", "concorrente"]],
+          ["Decisor e proximo passo", ["decisor", "responsavel", "decisao", "reuniao", "proximo passo"]],
+        ],
+      },
+      {
+        id: 7,
+        type: "open",
+        title:
+          "Monte uma abordagem inicial para recepcionar um lead inbound que pediu informacoes sobre registro de marca. A abordagem deve acolher o interesse, demonstrar profissionalismo e abrir espaco para qualificacao.",
+        guidance: "Boa resposta acolhe, contextualiza, pergunta de forma consultiva e evita despejar preco sem diagnostico.",
+        rubric: [
+          ["Acolhe o interesse", ["obrigado", "perfeito", "entendo", "legal", "claro"]],
+          ["Demonstra profissionalismo", ["avaliar", "entender", "orientar", "especialista", "seguranca"]],
+          ["Abre qualificacao", ["perguntas", "entender", "contexto", "marca", "empresa"]],
+          ["Investiga urgencia ou situacao", ["urgencia", "prazo", "ja usa", "notificacao", "registro"]],
+          ["Conduz proximo passo", ["posso", "vamos", "reuniao", "direcionar", "proximo passo"]],
+        ],
+      },
     ],
-    answer: 1,
   },
   {
     id: 2,
-    type: "open",
-    title: "Explique, com suas palavras, qual e a diferenca entre gerar uma reuniao e gerar uma reuniao qualificada.",
-    guidance: "Procure sinais de criterio: fit, contexto, dor, decisor, momento e proximo passo claro.",
-    rubric: [
-      ["Diferencia volume de qualidade", ["qualificada", "qualidade", "relevante", "aderente"]],
-      ["Considera fit ou perfil do cliente", ["fit", "perfil", "cliente ideal", "aderencia", "segmento"]],
-      ["Investiga dor, desafio ou necessidade", ["dor", "desafio", "problema", "necessidade", "demanda"]],
-      ["Valida decisor ou processo decisorio", ["decisor", "decisao", "autoridade", "responsavel", "quem decide"]],
-      ["Define contexto e proximo passo", ["contexto", "momento", "proximo passo", "reuniao com pauta", "objetivo"]],
+    title: "Leitura de oportunidades em PI e direcionamento",
+    shortTitle: "Bloco 2",
+    description: "Identificacao de oportunidades em marca, software, design, expansao internacional e demandas adjacentes.",
+    questions: [
+      {
+        id: 8,
+        type: "closed",
+        title: 'O lead diz: "Minha marca ja esta registrada, mas estao usando um nome muito parecido." Qual e a melhor reacao do SDR?',
+        options: [
+          "Encerrar, pois se a marca ja esta registrada nao ha novo servico.",
+          "Oferecer imediatamente um novo registro.",
+          "Investigar o caso, entender uso, segmento, evidencias, impacto e direcionar para analise especializada.",
+          "Garantir que o registro impede automaticamente o terceiro de usar marca parecida.",
+        ],
+        answer: 2,
+      },
+      {
+        id: 9,
+        type: "closed",
+        title: "O lead pergunta sobre marca, mas durante a conversa diz que desenvolveu um aplicativo proprio. Qual conduta e mais adequada?",
+        options: [
+          "Ignorar, pois o lead veio por marca.",
+          "Tentar vender registro de software imediatamente.",
+          "Registrar a informacao, fazer perguntas basicas sobre titularidade e relevancia do ativo, e avaliar direcionamento complementar.",
+          "Encaminhar diretamente para software sem qualificar a demanda de marca.",
+        ],
+        answer: 2,
+      },
+      {
+        id: 10,
+        type: "closed",
+        title: "Um lead diz: \"Estamos lancando uma nova embalagem e queremos proteger.\" Qual pergunta inicial e melhor?",
+        options: [
+          "Voce quer registrar a marca da embalagem?",
+          "Essa embalagem tem um nome?",
+          "Quando falam em proteger a embalagem, voces se referem ao nome, ao visual/design, ao produto em si ou ao conjunto da estrategia?",
+          "Voces sabem que embalagem nao pode ser patenteada?",
+        ],
+        answer: 2,
+      },
+      {
+        id: 11,
+        type: "closed",
+        title: "O lead informa que pretende vender para fora do Brasil. Qual resposta demonstra melhor leitura comercial?",
+        options: [
+          "Entao voces precisam registrar a marca internacionalmente.",
+          "Para quais paises, em qual prazo, com quais marcas/produtos e em que estagio esta essa expansao?",
+          "O registro no Brasil ja protege parcialmente la fora.",
+          "Isso deve ser tratado apenas depois que venderem no exterior.",
+        ],
+        answer: 1,
+      },
+      {
+        id: 12,
+        type: "closed",
+        title:
+          "Durante uma conversa sobre marca, o lead comenta que esta montando uma sociedade com outro socio e quer evitar problemas futuros. Qual deve ser a postura do SDR?",
+        options: [
+          "Explicar como dividir quotas e responsabilidades.",
+          "Ignorar porque nao e PI.",
+          "Investigar brevemente o contexto, registrar a demanda adjacente e direcionar para a area/especialista adequado.",
+          "Voltar imediatamente ao roteiro de registro de marca.",
+        ],
+        answer: 2,
+      },
+      {
+        id: 13,
+        type: "open",
+        title:
+          "Um lead procura a Totall para registrar uma marca, mas durante a qualificacao voce identifica possiveis temas de software, contrato com fornecedor e expansao internacional. Como voce organizaria essa oportunidade para nao perder o foco principal e, ao mesmo tempo, nao deixar oportunidades importantes passarem?",
+        guidance: "Resposta forte prioriza a demanda central, registra oportunidades adjacentes e direciona com contexto.",
+        rubric: [
+          ["Mantem foco principal em marca", ["marca", "principal", "prioridade", "foco", "demanda central"]],
+          ["Registra temas adjacentes", ["software", "contrato", "internacional", "adjacente", "registrar"]],
+          ["Qualifica cada frente", ["perguntar", "entender", "contexto", "titularidade", "paises"]],
+          ["Organiza passagem clara", ["crm", "briefing", "registro", "historico", "resumo"]],
+          ["Direciona especialista adequado", ["especialista", "closer", "area", "encaminhar", "direcionar"]],
+        ],
+      },
+      {
+        id: 14,
+        type: "open",
+        title:
+          'O lead diz: "Ja tenho uma empresa que cuida das minhas marcas." Escreva cinco perguntas que voce faria para entender se existe oportunidade real, sem criticar o fornecedor atual e sem forcar uma venda.',
+        guidance: "Avalie postura consultiva, respeito ao fornecedor atual, carteira, satisfacao, riscos, prazos e abertura para benchmark.",
+        rubric: [
+          ["Respeita fornecedor atual", ["entendo", "sem criticar", "atual", "fornecedor", "experiencia"]],
+          ["Investiga satisfacao", ["satisfeito", "satisfacao", "atendimento", "experiencia", "como tem sido"]],
+          ["Mapeia carteira e prazos", ["carteira", "vencimento", "renovacao", "processos", "marcas"]],
+          ["Aprofunda riscos ou lacunas", ["risco", "problema", "dificuldade", "pendencia", "concorrente"]],
+          ["Abre benchmark sem pressao", ["benchmark", "segunda opiniao", "comparar", "diagnostico", "avaliar"]],
+        ],
+      },
     ],
   },
   {
     id: 3,
-    type: "closed",
-    title:
-      "Um lead demonstrou interesse no servico, mas o SDR identificou que ele nao participa da decisao e nao sabe quem e o responsavel pela contratacao. Qual e a melhor conduta?",
-    options: [
-      "Agendar imediatamente com o closer",
-      "Descartar o lead",
-      "Entender o processo decisorio e buscar envolver a pessoa responsavel",
-      "Enviar uma proposta comercial",
-    ],
-    answer: 2,
-  },
-  {
-    id: 4,
-    type: "open",
-    title:
-      "Imagine que voce esta conversando com um empresario que diz: \"Ja temos uma empresa que cuida das nossas marcas.\" Como voce conduziria a conversa a partir dessa resposta?",
-    guidance: "Boa resposta reconhece o cenario, aprofunda satisfacao, riscos, prazos, carteira e abertura para benchmark.",
-    rubric: [
-      ["Reconhece a situacao sem confronto", ["entendo", "otimo", "perfeito", "legal", "bom saber"]],
-      ["Pergunta sobre satisfacao atual", ["satisfeito", "satisfacao", "experiencia", "atendimento", "como tem sido"]],
-      ["Aprofunda riscos, prazos ou carteira", ["risco", "prazo", "vencimento", "registro", "carteira", "marca"]],
-      ["Busca oportunidade de benchmark", ["comparar", "benchmark", "segunda opiniao", "avaliar", "diagnostico"]],
-      ["Termina com pergunta consultiva", ["como", "qual", "quando", "posso", "?"]],
-    ],
-  },
-  {
-    id: 5,
-    type: "closed",
-    title: "Qual alternativa representa uma boa pergunta de descoberta?",
-    options: [
-      "Voce quer receber uma proposta?",
-      "Podemos marcar uma reuniao amanha?",
-      "Como voces administram atualmente esse processo e quais sao os principais desafios?",
-      "Nosso servico e muito completo, posso apresentar?",
-    ],
-    answer: 2,
-  },
-  {
-    id: 6,
-    type: "open",
-    title:
-      "Voce recebeu uma lista com 50 empresas para prospectar. Explique como organizaria sua abordagem e sua rotina de contato durante a semana.",
-    guidance: "Avalie priorizacao, pesquisa rapida, cadencia multicanal, blocos de foco e controle de follow-up.",
-    rubric: [
-      ["Prioriza ou segmenta a lista", ["priorizar", "segmentar", "ranking", "porte", "potencial", "perfil"]],
-      ["Faz pesquisa antes do contato", ["pesquisa", "linkedin", "site", "marca", "noticia", "informacao"]],
-      ["Usa cadencia estruturada", ["cadencia", "tentativas", "follow-up", "sequencia", "rotina"]],
-      ["Combina canais de contato", ["telefone", "whatsapp", "email", "linkedin", "ligacao"]],
-      ["Registra e controla no CRM", ["crm", "registrar", "controle", "historico", "status"]],
-    ],
-  },
-  {
-    id: 7,
-    type: "closed",
-    title: "Qual dessas informacoes e mais importante registrar no CRM apos uma conversa de qualificacao?",
-    options: [
-      "Apenas o telefone do lead",
-      "Apenas se ele aceitou ou recusou a reuniao",
-      "Contexto, dores identificadas, momento, decisores, objecoes e proximos passos",
-      "Somente o numero de tentativas realizadas",
-    ],
-    answer: 2,
-  },
-  {
-    id: 8,
-    type: "open",
-    title: "Na sua opiniao, quais informacoes minimas um SDR precisa descobrir antes de passar uma oportunidade para o closer?",
-    guidance: "Inclui fit, dor, impacto, autoridade, prazo, urgencia, objecoes e expectativa da reuniao.",
-    rubric: [
-      ["Confirma fit da oportunidade", ["fit", "perfil", "segmento", "tamanho", "aderencia"]],
-      ["Mapeia dor e impacto", ["dor", "impacto", "problema", "necessidade", "consequencia"]],
-      ["Identifica decisor ou processo", ["decisor", "decisao", "autoridade", "responsavel", "processo"]],
-      ["Entende momento, prazo ou urgencia", ["momento", "prazo", "urgencia", "prioridade", "quando"]],
-      ["Registra objeções e proximos passos", ["objecao", "obstaculo", "proximo passo", "reuniao", "expectativa"]],
-    ],
-  },
-  {
-    id: 9,
-    type: "closed",
-    title: "Um prospect nao respondeu a primeira mensagem. Qual deve ser a atitude do SDR?",
-    options: [
-      "Encerrar imediatamente a oportunidade",
-      "Fazer novas tentativas utilizando uma cadencia estruturada e diferentes abordagens",
-      "Enviar uma proposta comercial sem conversar com ele",
-      "Passar o contato diretamente para o closer",
-    ],
-    answer: 1,
-  },
-  {
-    id: 10,
-    type: "open",
-    title:
-      "Voce conseguiu falar com o proprietario de uma empresa. Ele diz: \"Tenho interesse, mas agora estou sem tempo. Me liga daqui a tres meses.\" Como voce responderia e quais informacoes tentaria descobrir antes de encerrar a conversa?",
-    guidance: "Procure combinacao de respeito ao timing, micropergunta de diagnostico e agendamento de retorno com contexto.",
-    rubric: [
-      ["Respeita o timing do prospect", ["entendo", "sem problema", "respeito", "claro", "combinado"]],
-      ["Investiga motivo ou prioridade", ["motivo", "prioridade", "por que", "o que muda", "acontecendo"]],
-      ["Busca diagnostico antes de encerrar", ["pergunta", "entender", "diagnostico", "contexto", "desafio"]],
-      ["Agenda retorno concreto", ["agendar", "marcar", "data", "retorno", "calendario", "tres meses"]],
-      ["Mantem valor ou proximo passo leve", ["enviar", "material", "conteudo", "preparar", "ajudar"]],
-    ],
-  },
-  {
-    id: 11,
-    type: "closed",
-    title: "Qual indicador representa melhor a qualidade do trabalho de um SDR?",
-    options: [
-      "Quantidade de mensagens enviadas isoladamente",
-      "Quantidade de ligacoes realizadas isoladamente",
-      "Numero de oportunidades qualificadas que avancam no funil comercial",
-      "Quantidade de contatos existentes no WhatsApp",
-    ],
-    answer: 2,
-  },
-  {
-    id: 12,
-    type: "open",
-    title:
-      "Explique o que significa personalizar uma prospeccao. De um exemplo de abordagem personalizada para uma empresa que voce pesquisou antes do contato.",
-    guidance: "Boa resposta usa evidencia real da empresa e conecta essa evidencia a uma pergunta relevante.",
-    rubric: [
-      ["Define personalizacao com clareza", ["personalizar", "especifico", "contexto", "nao generico", "relevante"]],
-      ["Usa pesquisa concreta da empresa", ["pesquisei", "site", "linkedin", "noticia", "mercado", "marca"]],
-      ["Conecta pesquisa a hipotese de dor", ["dor", "hipotese", "desafio", "risco", "oportunidade"]],
-      ["Evita apresentacao longa", ["breve", "objetivo", "curto", "sem apresentar", "sem vender"]],
-      ["Termina com pergunta aberta", ["como", "qual", "quando", "faz sentido", "?"]],
-    ],
-  },
-  {
-    id: 13,
-    type: "closed",
-    title: "Durante uma ligacao, o prospect comeca a explicar um problema da empresa. O SDR deve:",
-    options: [
-      "Interromper para apresentar rapidamente o servico",
-      "Escutar, aprofundar o problema e entender seu impacto",
-      "Informar imediatamente o preco",
-      "Transferir a ligacao sem contexto para o closer",
-    ],
-    answer: 1,
-  },
-  {
-    id: 14,
-    type: "open",
-    title:
-      "Um SDR agendou 30 reunioes no mes. Outro SDR agendou 18. O primeiro teve 8 reunioes realizadas e 2 oportunidades reais. O segundo teve 15 reunioes realizadas e 10 oportunidades reais. Quem teve o melhor desempenho? Justifique sua resposta.",
-    guidance: "Resposta forte valoriza conversao, qualidade e oportunidades reais em vez de volume bruto.",
-    rubric: [
-      ["Identifica o segundo SDR como melhor", ["segundo", "18", "15", "10"]],
-      ["Valoriza oportunidades reais", ["oportunidades reais", "oportunidade", "qualidade", "avancam"]],
-      ["Compara conversao e nao so volume", ["conversao", "taxa", "percentual", "volume", "quantidade"]],
-      ["Usa os numeros do caso", ["30", "18", "8", "2", "15", "10"]],
-      ["Justifica com raciocinio de funil", ["funil", "realizadas", "qualificadas", "eficiencia", "desempenho"]],
-    ],
-  },
-  {
-    id: 15,
-    type: "open",
-    title:
-      "Construa uma abordagem inicial de prospeccao para um potencial cliente da Totall. A mensagem deve demonstrar pesquisa minima, gerar curiosidade, evitar apresentacao longa e terminar com uma pergunta que incentive a continuidade.",
-    guidance: "Avalie especificidade, clareza, brevidade, tom consultivo e pergunta final aberta.",
-    rubric: [
-      ["Demonstra pesquisa minima", ["vi que", "notei", "pesquisei", "site", "linkedin", "marca"]],
-      ["Gera curiosidade", ["curiosidade", "percebi", "ponto", "oportunidade", "risco"]],
-      ["Mantem mensagem breve", ["breve", "rapido", "objetivo", "curto"]],
-      ["Usa tom consultivo", ["entender", "ajudar", "avaliar", "diagnostico", "conversar"]],
-      ["Termina com pergunta de continuidade", ["podemos", "faz sentido", "como", "qual", "?"]],
+    title: "Organizacao, CRM e passagem para closer",
+    shortTitle: "Bloco 3",
+    description: "Priorizacao de rotina, qualidade de CRM, briefing para closer e autodiagnostico do SDR.",
+    questions: [
+      {
+        id: 15,
+        type: "closed",
+        title: "Qual briefing e mais util para o closer?",
+        options: [
+          "Lead interessado em marca. Quer reuniao.",
+          "Lead pediu preco. Parece bom.",
+          "Empresa X quer registrar marca Y, ja usa ha 2 anos, atua em alimentos, recebeu alerta de concorrente parecido, decisor e o socio Joao, urgencia alta, reuniao marcada para avaliar estrategia.",
+          "Lead veio pelo site e pediu contato.",
+        ],
+        answer: 2,
+      },
+      {
+        id: 16,
+        type: "closed",
+        title: "Um lead pediu retorno em 30 dias porque esta aguardando definicao interna. Qual registro no CRM e mais correto?",
+        options: [
+          "Retornar depois.",
+          "Sem interesse agora.",
+          "Registrar motivo do prazo, quem decide, o que falta acontecer, data exata de retorno e proxima acao.",
+          "Deixar aberto sem tarefa para acompanhar quando possivel.",
+        ],
+        answer: 2,
+      },
+      {
+        id: 17,
+        type: "closed",
+        title: "O SDR recebe muitos leads no dia. Qual ordem tende a ser mais criteriosa?",
+        options: [
+          "Responder primeiro quem parece mais simpatico.",
+          "Atender por ordem aleatoria, desde que todos sejam respondidos no dia.",
+          "Priorizar SLA de inbound, urgencia, potencial, retornos prometidos e reunioes proximas.",
+          "Priorizar apenas leads que pedem preco.",
+        ],
+        answer: 2,
+      },
+      {
+        id: 18,
+        type: "closed",
+        title:
+          "Uma reuniao foi marcada, mas o SDR nao registrou dor, contexto, decisor, urgencia nem origem do lead. Qual e o principal risco?",
+        options: [
+          "O closer pode mesmo assim conduzir normalmente.",
+          "A reuniao perde contexto, o lead repete informacoes e a chance de conversao pode cair.",
+          "Nao ha risco se a reuniao estiver na agenda.",
+          "O problema e apenas administrativo.",
+        ],
+        answer: 1,
+      },
+      {
+        id: 19,
+        type: "closed",
+        title: "O SDR esta com muitas oportunidades abertas, mas varias sem proxima acao. Qual diagnostico e mais adequado?",
+        options: [
+          "Pipeline cheio e sempre positivo.",
+          "O SDR esta prospectando bem.",
+          "Ha risco de pipeline artificial; oportunidade sem proxima acao definida precisa ser avancada, reciclada ou encerrada.",
+          "O closer deve resolver isso depois.",
+        ],
+        answer: 2,
+      },
+      {
+        id: 20,
+        type: "open",
+        title:
+          "Voce recebeu hoje: 8 leads inbound novos; 3 retornos prometidos; 2 reunioes para confirmar; 5 leads antigos sem proxima acao; 1 lead urgente envolvendo possivel conflito de marca. Como voce organizaria sua rotina ate o fim do dia?",
+        guidance: "Procure priorizacao por urgencia/SLA, compromissos, confirmacoes, CRM e limpeza de pipeline.",
+        rubric: [
+          ["Prioriza conflito urgente", ["urgente", "conflito", "prioridade", "notificacao", "risco"]],
+          ["Respeita SLA de inbound", ["inbound", "sla", "rapido", "novos leads", "responder"]],
+          ["Cumpre retornos prometidos", ["retornos", "prometidos", "combinado", "prazo", "follow up"]],
+          ["Confirma reunioes", ["confirmar", "reunioes", "agenda", "closer", "contexto"]],
+          ["Organiza CRM e proximas acoes", ["crm", "proxima acao", "pipeline", "registrar", "encerrar"]],
+        ],
+      },
+      {
+        id: 21,
+        type: "open",
+        title:
+          "Crie um modelo de passagem de bastao ideal para o closer. Inclua quais informacoes obrigatorias o SDR deve registrar antes de marcar ou transferir uma reuniao.",
+        guidance: "Boa resposta vira um briefing utilizavel: contexto, empresa, marca, dor, impacto, decisor, urgencia, origem e proximo passo.",
+        rubric: [
+          ["Identifica empresa, contato e marca", ["empresa", "contato", "marca", "lead", "origem"]],
+          ["Resume contexto e dor", ["contexto", "dor", "problema", "necessidade", "motivo"]],
+          ["Inclui decisor e processo", ["decisor", "responsavel", "processo", "autoridade", "socio"]],
+          ["Indica urgencia, impacto e prazo", ["urgencia", "impacto", "prazo", "risco", "prioridade"]],
+          ["Define proximo passo e observacoes", ["proximo passo", "reuniao", "agenda", "observacoes", "crm"]],
+        ],
+      },
+      {
+        id: 22,
+        type: "diagnostic",
+        title: "Questao final - autodiagnostico: em qual etapa voce acredita que mais precisa evoluir hoje?",
+        options: [
+          "Recepcao rapida do lead",
+          "Qualificacao",
+          "Perguntas de descoberta",
+          "Identificacao de oportunidades em PI",
+          "Identificacao de demandas adjacentes",
+          "Registro no CRM",
+          "Organizacao de rotina",
+          "Passagem de bastao para closer",
+        ],
+        guidance: "Explique brevemente o motivo da sua escolha.",
+      },
     ],
   },
 ];
 
+const questions = sections.flatMap((section) => section.questions.map((question) => ({ ...question, sectionId: section.id })));
 const state = {
+  currentSection: 0,
+  completedSections: new Set(),
+  values: {},
   submitted: false,
   submission: null,
 };
 
-const letterLabels = ["a", "b", "c", "d"];
+const letterLabels = ["a", "b", "c", "d", "e", "f", "g", "h"];
 const ownerEmail = "rodrigo.melo@totallpi.co";
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("examDate").valueAsDate = new Date();
+  renderSectionNavigation();
   renderQuestions();
   bindEvents();
   updateProgress();
 });
 
 function bindEvents() {
-  document.getElementById("examForm").addEventListener("input", updateProgress);
+  document.getElementById("examForm").addEventListener("input", () => {
+    saveCurrentSectionValues();
+    state.completedSections.delete(currentSection().id);
+    updateProgress();
+  });
   document.getElementById("candidateForm").addEventListener("input", updateProgress);
   document.getElementById("examForm").addEventListener("submit", handleSubmit);
   document.getElementById("clearButton").addEventListener("click", clearExam);
   document.getElementById("copyButton").addEventListener("click", copyResult);
   document.getElementById("emailButton").addEventListener("click", sendCandidateCopyEmail);
   document.getElementById("printButton").addEventListener("click", () => window.print());
+  document.getElementById("previousSectionButton").addEventListener("click", goToPreviousSection);
+  document.getElementById("sectionActionButton").addEventListener("click", handleSectionAction);
+}
+
+function renderSectionNavigation() {
+  document.getElementById("sectionTabs").innerHTML = sections
+    .map(
+      (section, index) => `
+        <button
+          type="button"
+          class="section-tab"
+          data-section-index="${index}"
+          aria-current="${index === state.currentSection ? "step" : "false"}"
+        >
+          <span>${section.shortTitle}</span>
+          <strong>${escapeHtml(section.title)}</strong>
+        </button>
+      `
+    )
+    .join("");
+
+  document.querySelectorAll(".section-tab").forEach((button) => {
+    button.addEventListener("click", () => {
+      const target = Number(button.dataset.sectionIndex);
+      if (canOpenSection(target)) {
+        state.currentSection = target;
+        renderQuestions();
+        updateProgress();
+      } else {
+        setFinishStatus("Finalize todas as respostas do bloco atual antes de avancar.");
+      }
+    });
+  });
 }
 
 function renderQuestions() {
-  document.getElementById("questions").innerHTML = questions.map(renderQuestion).join("");
+  const section = currentSection();
+  document.getElementById("sectionEyebrow").textContent = section.shortTitle;
+  document.getElementById("sectionTitle").textContent = section.title;
+  document.getElementById("sectionDescription").textContent = section.description;
+  document.getElementById("questions").innerHTML = section.questions.map(renderQuestion).join("");
+  updateSectionControls();
 }
 
 function renderQuestion(question) {
-  const eyebrow = question.type === "closed" ? "Pergunta fechada" : "Pergunta aberta";
-  const body =
-    question.type === "closed"
-      ? `<div class="options">${question.options
-          .map(
-            (option, index) => `
-              <label class="option">
-                <input type="radio" name="q${question.id}" value="${index}" required />
-                <span>${letterLabels[index]}) ${escapeHtml(option)}</span>
-              </label>
-            `
-          )
-          .join("")}</div>`
-      : `<textarea name="q${question.id}" rows="6" minlength="20" required placeholder="Digite a resposta do candidato..."></textarea>
-         <p class="guidance">${escapeHtml(question.guidance)}</p>`;
+  const eyebrow =
+    question.type === "closed" ? "Multipla escolha" : question.type === "diagnostic" ? "Autodiagnostico" : "Resposta aberta";
+  const body = question.type === "closed" ? renderOptions(question) : question.type === "diagnostic" ? renderDiagnostic(question) : renderOpen(question);
 
   return `
     <article class="question-card" id="question-${question.id}">
@@ -256,14 +402,83 @@ function renderQuestion(question) {
   `;
 }
 
+function renderOptions(question) {
+  return `<div class="options">${question.options
+    .map(
+      (option, index) => `
+        <label class="option">
+          <input type="radio" name="q${question.id}" value="${index}" ${getAnswerValue(question.id) === String(index) ? "checked" : ""} required />
+          <span>${letterLabels[index]}) ${escapeHtml(option)}</span>
+        </label>
+      `
+    )
+    .join("")}</div>`;
+}
+
+function renderOpen(question) {
+  return `<textarea name="q${question.id}" rows="6" minlength="20" required placeholder="Digite a resposta do candidato...">${escapeHtml(
+    getAnswerValue(question.id)
+  )}</textarea>
+    <p class="guidance">${escapeHtml(question.guidance)}</p>`;
+}
+
+function renderDiagnostic(question) {
+  return `
+    <div class="options diagnostic-options">
+      ${question.options
+        .map(
+          (option, index) => `
+            <label class="option">
+              <input type="radio" name="q${question.id}" value="${index}" ${getAnswerValue(question.id) === String(index) ? "checked" : ""} required />
+              <span>${letterLabels[index]}) ${escapeHtml(option)}</span>
+            </label>
+          `
+        )
+        .join("")}
+    </div>
+    <textarea name="q${question.id}_explain" rows="4" minlength="12" required placeholder="Explique brevemente...">${escapeHtml(
+      getAnswerValue(`${question.id}_explain`)
+    )}</textarea>
+    <p class="guidance">${escapeHtml(question.guidance)}</p>
+  `;
+}
+
+function handleSectionAction() {
+  saveCurrentSectionValues();
+  setFinishStatus("");
+  if (!document.getElementById("candidateForm").reportValidity()) return;
+
+  const section = currentSection();
+  if (!validateCurrentSection()) {
+    setFinishStatus("Responda todas as perguntas deste bloco antes de continuar.");
+    return;
+  }
+
+  state.completedSections.add(section.id);
+  if (isLastSection()) {
+    document.getElementById("examForm").requestSubmit();
+    return;
+  }
+
+  state.currentSection += 1;
+  renderQuestions();
+  updateProgress();
+  document.getElementById("sectionTitle").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 async function handleSubmit(event) {
   event.preventDefault();
+  saveCurrentSectionValues();
 
   if (!document.getElementById("candidateForm").reportValidity()) return;
-  if (!document.getElementById("examForm").reportValidity()) return;
+  if (!validateCurrentSection()) {
+    setFinishStatus("Responda todas as perguntas do ultimo bloco antes de finalizar.");
+    return;
+  }
 
+  state.completedSections.add(currentSection().id);
   const result = calculateResult();
-  const submitButton = event.submitter || document.querySelector('button[type="submit"]');
+  const submitButton = document.getElementById("sectionActionButton");
   submitButton.disabled = true;
   submitButton.textContent = "Finalizando...";
   setFinishStatus("Finalizando e registrando o resultado para Rodrigo...");
@@ -282,17 +497,17 @@ async function handleSubmit(event) {
     setEmailStatus("Nao foi possivel finalizar", error.message);
   } finally {
     submitButton.disabled = false;
-    submitButton.textContent = "Finalizar prova";
+    updateSectionControls();
   }
 }
 
 function calculateResult() {
-  const form = new FormData(document.getElementById("examForm"));
   const closed = questions.filter((question) => question.type === "closed");
   const open = questions.filter((question) => question.type === "open");
-  const correctClosed = closed.filter((question) => Number(form.get(`q${question.id}`)) === question.answer).length;
-  const completedOpen = open.filter((question) => String(form.get(`q${question.id}`) || "").trim().length >= 20).length;
-  const openEvaluation = evaluateOpenAnswers(form);
+  const correctClosed = closed.filter((question) => Number(getAnswerValue(question.id)) === question.answer).length;
+  const completedOpen = open.filter((question) => String(getAnswerValue(question.id) || "").trim().length >= 20).length;
+  const diagnosticCompleted = questions.filter((question) => question.type === "diagnostic" && isAnswered(question)).length;
+  const openEvaluation = evaluateOpenAnswers();
   const closedRate = Math.round((correctClosed / closed.length) * 100);
 
   return {
@@ -300,6 +515,8 @@ function calculateResult() {
     closedTotal: closed.length,
     completedOpen,
     openTotal: open.length,
+    diagnosticCompleted,
+    diagnosticTotal: questions.filter((question) => question.type === "diagnostic").length,
     closedRate,
     openEvaluation,
   };
@@ -314,13 +531,13 @@ function renderResult(result, submission) {
   document.getElementById("openScore").textContent = `${result.openEvaluation.rate}%`;
 
   const combinedRate = Math.round((result.closedRate + result.openEvaluation.rate) / 2);
-  const title = combinedRate >= 85 ? "Excelente criterio tecnico" : combinedRate >= 70 ? "Bom desempenho" : "Revisao recomendada";
+  const title = resultTitleFromRate(combinedRate);
   const feedback =
     combinedRate >= 85
-      ? "O conjunto de respostas indica boa leitura do papel de SDR, com criterios de qualificacao e raciocinio comercial consistentes."
+      ? "O conjunto de respostas indica boa leitura de inbound, qualificacao, oportunidades em PI e passagem para closer."
       : combinedRate >= 70
         ? "O resultado automatico e positivo, mas vale revisar os pontos fracos das respostas abertas antes da decisao final."
-        : "O candidato precisa demonstrar mais dominio em qualificacao, descoberta e criterios de passagem para o closer.";
+        : "O candidato precisa demonstrar mais dominio em qualificacao, leitura de oportunidade, rotina de CRM e direcionamento ao closer.";
 
   document.getElementById("resultTitle").textContent = title;
   document.getElementById("resultFeedback").textContent = feedback;
@@ -328,10 +545,10 @@ function renderResult(result, submission) {
   renderSubmissionStatus(submission);
 }
 
-function evaluateOpenAnswers(form) {
+function evaluateOpenAnswers() {
   const items = questions
     .filter((question) => question.type === "open")
-    .map((question) => evaluateOpenQuestion(question, String(form.get(`q${question.id}`) || "")));
+    .map((question) => evaluateOpenQuestion(question, String(getAnswerValue(question.id) || "")));
   const score = items.reduce((total, item) => total + item.score, 0);
   const total = items.reduce((sum, item) => sum + item.total, 0);
 
@@ -403,18 +620,93 @@ function updateProgress() {
   document.getElementById("progressBar").style.width = `${percent}%`;
   document.getElementById("progressLabel").textContent = state.submitted
     ? "Prova finalizada. Confira o resumo automatico e revise as respostas abertas."
-    : percent === 100
-      ? "Todas as questoes foram preenchidas. Voce ja pode finalizar."
-      : `${percent}% da prova preenchida.`;
+    : `${currentSection().shortTitle}: ${sectionAnsweredCount(currentSection())}/${currentSection().questions.length} respostas preenchidas.`;
+
+  document.querySelectorAll(".section-tab").forEach((button, index) => {
+    const section = sections[index];
+    button.setAttribute("aria-current", index === state.currentSection ? "step" : "false");
+    button.classList.toggle("is-active", index === state.currentSection);
+    button.classList.toggle("is-complete", state.completedSections.has(section.id));
+    button.disabled = !canOpenSection(index);
+  });
+  updateSectionControls();
 }
 
 function isAnswered(question) {
   const fieldName = `q${question.id}`;
   if (question.type === "closed") {
-    return Boolean(document.querySelector(`input[name="${fieldName}"]:checked`));
+    return Boolean(document.querySelector(`input[name="${fieldName}"]:checked`)) || getAnswerValue(question.id) !== "";
   }
-  const value = document.querySelector(`textarea[name="${fieldName}"]`).value.trim();
+  if (question.type === "diagnostic") {
+    const selected = Boolean(document.querySelector(`input[name="${fieldName}"]:checked`)) || getAnswerValue(question.id) !== "";
+    const explanation =
+      document.querySelector(`textarea[name="${fieldName}_explain"]`)?.value.trim() || getAnswerValue(`${question.id}_explain`);
+    return selected && explanation.length >= 12;
+  }
+  const value = document.querySelector(`textarea[name="${fieldName}"]`)?.value.trim() || getAnswerValue(question.id);
   return value.length >= 20;
+}
+
+function validateCurrentSection() {
+  const invalidQuestion = currentSection().questions.find((question) => !isAnswered(question));
+  if (!invalidQuestion) return true;
+  const field = document.querySelector(`[name="q${invalidQuestion.id}"]`);
+  field?.reportValidity();
+  document.getElementById(`question-${invalidQuestion.id}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+  return false;
+}
+
+function sectionAnsweredCount(section) {
+  return section.questions.filter((question) => isAnswered(question)).length;
+}
+
+function canOpenSection(targetIndex) {
+  if (targetIndex <= state.currentSection) return true;
+  return sections.slice(0, targetIndex).every((section) => state.completedSections.has(section.id));
+}
+
+function updateSectionControls() {
+  const previousButton = document.getElementById("previousSectionButton");
+  const actionButton = document.getElementById("sectionActionButton");
+  previousButton.disabled = state.currentSection === 0 || state.submitted;
+  actionButton.textContent = isLastSection() ? "Finalizar prova" : "Finalizar bloco e avancar";
+  actionButton.hidden = state.submitted;
+}
+
+function goToPreviousSection() {
+  saveCurrentSectionValues();
+  if (state.currentSection === 0 || state.submitted) return;
+  state.currentSection -= 1;
+  renderQuestions();
+  updateProgress();
+  document.getElementById("sectionTitle").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function currentSection() {
+  return sections[state.currentSection];
+}
+
+function saveCurrentSectionValues() {
+  currentSection().questions.forEach((question) => {
+    const fieldName = `q${question.id}`;
+    const selected = document.querySelector(`input[name="${fieldName}"]:checked`);
+    const text = document.querySelector(`textarea[name="${fieldName}"]`);
+    if (selected) state.values[fieldName] = selected.value;
+    if (text) state.values[fieldName] = text.value;
+
+    if (question.type === "diagnostic") {
+      const explanation = document.querySelector(`textarea[name="${fieldName}_explain"]`);
+      if (explanation) state.values[`${fieldName}_explain`] = explanation.value;
+    }
+  });
+}
+
+function getAnswerValue(questionId) {
+  return state.values[`q${questionId}`] || "";
+}
+
+function isLastSection() {
+  return state.currentSection === sections.length - 1;
 }
 
 function clearExam() {
@@ -422,10 +714,14 @@ function clearExam() {
   document.getElementById("candidateForm").reset();
   document.getElementById("examDate").valueAsDate = new Date();
   document.getElementById("resultCard").hidden = true;
+  state.currentSection = 0;
+  state.completedSections.clear();
+  state.values = {};
   state.submitted = false;
   state.submission = null;
   setFinishStatus("");
   setEmailStatus("Envio automatico", "Ao finalizar, o resultado e enviado para Rodrigo e fica registrado no servidor.");
+  renderQuestions();
   updateProgress();
   document.getElementById("candidateName").focus();
 }
@@ -441,25 +737,16 @@ async function copyResult() {
 }
 
 function buildResultText() {
-  const form = new FormData(document.getElementById("examForm"));
+  saveCurrentSectionValues();
   const result = calculateResult();
   const candidate = document.getElementById("candidateName").value.trim() || "Nao informado";
   const email = document.getElementById("resultEmail").value.trim() || "Nao informado";
   const date = document.getElementById("examDate").value || "Nao informada";
   const reviewer = document.getElementById("reviewerName").value.trim() || "Nao informado";
-  const answers = questions
-    .map((question) => {
-      const value = form.get(`q${question.id}`);
-      const answer =
-        question.type === "closed"
-          ? `${letterLabels[Number(value)] || "-"} - ${question.options[Number(value)] || "Sem resposta"}`
-          : String(value || "Sem resposta").trim();
-      return `${question.id}. ${answer}`;
-    })
-    .join("\n");
+  const answers = questions.map((question) => `${question.id}. ${answerText(question)}`).join("\n");
 
   return [
-    "Prova de Conhecimentos SDR - Totall",
+    "Avaliacao de Calibracao SDR - Totall",
     `Candidato: ${candidate}`,
     `Email: ${email}`,
     `Data: ${date}`,
@@ -491,13 +778,12 @@ async function submitResultToOwner(result) {
 }
 
 function buildSubmissionPayload(result) {
-  const form = new FormData(document.getElementById("examForm"));
+  saveCurrentSectionValues();
   const candidate = document.getElementById("candidateName").value.trim();
   const candidateEmail = document.getElementById("resultEmail").value.trim();
   const date = document.getElementById("examDate").value;
   const reviewer = document.getElementById("reviewerName").value.trim();
   const combinedRate = Math.round((result.closedRate + result.openEvaluation.rate) / 2);
-  const title = combinedRate >= 85 ? "Excelente criterio tecnico" : combinedRate >= 70 ? "Bom desempenho" : "Revisao recomendada";
 
   return {
     ownerEmail,
@@ -508,20 +794,29 @@ function buildSubmissionPayload(result) {
     exam: {
       date,
       reviewer,
-      title,
+      title: resultTitleFromRate(combinedRate),
       result,
+      sections: sections.map((section) => ({
+        id: section.id,
+        title: section.title,
+        answered: sectionAnsweredCount(section),
+        total: section.questions.length,
+      })),
     },
     answers: questions.map((question) => {
-      const value = form.get(`q${question.id}`);
+      const value = getAnswerValue(question.id);
+      const explanation = getAnswerValue(`${question.id}_explain`);
       return {
         id: question.id,
+        sectionId: question.sectionId,
         type: question.type,
         title: question.title,
-        selectedIndex: question.type === "closed" ? Number(value) : null,
-        selectedLabel: question.type === "closed" ? letterLabels[Number(value)] || null : null,
-        selectedText: question.type === "closed" ? question.options[Number(value)] || "" : "",
+        selectedIndex: question.type === "closed" || question.type === "diagnostic" ? Number(value) : null,
+        selectedLabel: question.type === "closed" || question.type === "diagnostic" ? letterLabels[Number(value)] || null : null,
+        selectedText:
+          question.type === "closed" || question.type === "diagnostic" ? question.options[Number(value)] || "" : "",
         correct: question.type === "closed" ? Number(value) === question.answer : null,
-        answer: question.type === "open" ? String(value || "").trim() : "",
+        answer: question.type === "open" ? String(value || "").trim() : question.type === "diagnostic" ? String(explanation || "").trim() : "",
         evaluation:
           question.type === "open"
             ? result.openEvaluation.items.find((item) => item.id === question.id) || null
@@ -529,6 +824,19 @@ function buildSubmissionPayload(result) {
       };
     }),
   };
+}
+
+function answerText(question) {
+  const value = getAnswerValue(question.id);
+  if (question.type === "closed") {
+    return `${letterLabels[Number(value)] || "-"} - ${question.options[Number(value)] || "Sem resposta"}`;
+  }
+  if (question.type === "diagnostic") {
+    return `${letterLabels[Number(value)] || "-"} - ${question.options[Number(value)] || "Sem resposta"} | ${String(
+      getAnswerValue(`${question.id}_explain`) || "Sem explicacao"
+    ).trim()}`;
+  }
+  return String(value || "Sem resposta").trim();
 }
 
 function renderSubmissionStatus(submission) {
@@ -573,6 +881,7 @@ function sendCandidateCopyEmail() {
 }
 
 function buildEmailText() {
+  saveCurrentSectionValues();
   const result = calculateResult();
   const candidate = document.getElementById("candidateName").value.trim() || "Nao informado";
   const email = document.getElementById("resultEmail").value.trim() || "Nao informado";
@@ -582,7 +891,7 @@ function buildEmailText() {
   const feedback = document.getElementById("resultFeedback").textContent || "";
 
   return [
-    "Prova de Conhecimentos SDR - Totall",
+    "Avaliacao de Calibracao SDR - Totall",
     "",
     `Candidato: ${candidate}`,
     `Email: ${email}`,
@@ -598,6 +907,12 @@ function buildEmailText() {
     "",
     "Observacao: as respostas completas ficam disponiveis no botao Copiar resultado ou na impressao da prova.",
   ].join("\n");
+}
+
+function resultTitleFromRate(rate) {
+  if (rate >= 85) return "Excelente calibracao SDR";
+  if (rate >= 70) return "Boa calibracao SDR";
+  return "Revisao recomendada";
 }
 
 function setEmailStatus(title, message) {

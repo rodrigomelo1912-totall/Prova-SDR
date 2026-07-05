@@ -255,6 +255,77 @@ textarea:focus {
   gap: 16px;
 }
 
+.section-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.section-tab {
+  display: grid;
+  align-content: start;
+  gap: 5px;
+  min-height: 78px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--muted);
+  text-align: left;
+  box-shadow: var(--shadow);
+}
+
+.section-tab span {
+  color: var(--brand-2);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.section-tab strong {
+  color: var(--brand);
+  font-size: 14px;
+  line-height: 1.25;
+}
+
+.section-tab.is-active {
+  border-color: var(--brand-2);
+  background: var(--brand-soft);
+}
+
+.section-tab.is-complete::after {
+  content: "Concluido";
+  color: var(--success);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.section-tab:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.section-panel {
+  display: grid;
+  gap: 8px;
+  padding: clamp(18px, 3vw, 26px);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.section-panel h2 {
+  color: var(--brand);
+  font-size: clamp(24px, 3vw, 34px);
+  line-height: 1.1;
+}
+
+.section-panel p:last-child {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
 .question-card {
   padding: clamp(18px, 3vw, 28px);
 }
@@ -288,6 +359,10 @@ textarea:focus {
 .options {
   display: grid;
   gap: 10px;
+}
+
+.diagnostic-options {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .option {
@@ -512,8 +587,10 @@ button {
   }
 
   .sidebar,
+  .section-tabs,
   .result-grid,
-  .open-evaluation-grid {
+  .open-evaluation-grid,
+  .diagnostic-options {
     grid-template-columns: 1fr;
   }
 

@@ -180,12 +180,12 @@ async function evaluateOpenAnswersWithAi(submission) {
           {
             role: "system",
             content:
-              "Voce e um avaliador senior de SDR da Totall Propriedade Intelectual. Avalie respostas abertas com criterio comercial, sem ser excessivamente generoso. Dê notas de 0 a 10 por questao. Considere descoberta, qualificacao, decisor, dor, impacto, timing, CRM, cadencia, personalizacao, brevidade e pergunta de continuidade. Responda apenas no JSON definido.",
+              "Voce e um avaliador senior de SDR da Totall Propriedade Intelectual. Avalie respostas abertas com criterio comercial, sem ser excessivamente generoso. De notas de 0 a 10 por questao. Considere recepcao de inbound, qualificacao, decisor, urgencia, contexto da marca, oportunidades em PI, demandas adjacentes, CRM, rotina, passagem de bastao e direcionamento ao closer. Responda apenas no JSON definido.",
           },
           {
             role: "user",
             content: JSON.stringify({
-              exam: "Prova de Conhecimentos SDR",
+              exam: "Avaliacao de Calibracao SDR",
               candidate: submission.candidate.name,
               openAnswers,
             }),
@@ -286,8 +286,8 @@ function wordCountForOpenAnswer(submission, id) {
 
 function resultTitleFromRates(closedRate, openRate) {
   const combinedRate = Math.round((Number(closedRate || 0) + Number(openRate || 0)) / 2);
-  if (combinedRate >= 85) return "Excelente criterio tecnico";
-  if (combinedRate >= 70) return "Bom desempenho";
+  if (combinedRate >= 85) return "Excelente calibracao SDR";
+  if (combinedRate >= 70) return "Boa calibracao SDR";
   return "Revisao recomendada";
 }
 
