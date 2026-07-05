@@ -65,6 +65,31 @@ Para envio real online:
 
 O servidor usa `POST /users/{MS_GRAPH_SENDER}/sendMail` para enviar o resultado.
 
+### Por que nao usar o Outlook do Codex?
+
+O conector Outlook do Codex serve para eu criar rascunhos, ler ou enviar emails durante uma conversa assistida. Ele nao fica disponivel para visitantes do site e nao pode ser usado como backend permanente.
+
+Para candidatos externos, a estrutura correta e:
+
+```text
+Candidato -> Prova online -> Servidor Node -> Microsoft Graph -> Outlook/Exchange
+```
+
+### Diagnostico de email
+
+Com o servidor rodando, acesse:
+
+```text
+/api/email/status
+```
+
+Esse endpoint informa qual provedor esta ativo:
+
+- `microsoft-graph`: Outlook/Exchange pronto
+- `resend`: fallback transacional pronto
+- `webhook`: webhook pronto
+- `local`: nenhum envio externo configurado
+
 ## Deploy
 
 Este projeto precisa de hospedagem Node.js. GitHub Pages nao executa o servidor nem o envio de email.

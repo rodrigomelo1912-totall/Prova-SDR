@@ -4,13 +4,14 @@ const http = require("node:http");
 const crypto = require("node:crypto");
 const fs = require("node:fs");
 const path = require("node:path");
+const { DEFAULT_OWNER_EMAIL, emailConfigStatus, notifyResultOwner } = require("./api/email");
 
 loadDotEnv(path.join(__dirname, ".env"));
 
 const PORT = Number(process.env.PORT || 3000);
 const PUBLIC_DIR = path.join(__dirname, "public");
 const RESULTS_DIR = path.join(__dirname, "data", "submissions");
-const OWNER_EMAIL = "rodrigo.melo@totallpi.co";
+const OWNER_EMAIL = DEFAULT_OWNER_EMAIL;
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -31,6 +32,11 @@ const server = http.createServer(async (request, response) => {
         service: "prova-sdr",
         checkedAt: new Date().toISOString(),
       });
+      return;
+    }
+
+    if (url.pathname === "/api/email/status") {
+      sendJson(response, 200, emailConfigStatus(process.env));
       return;
     }
 
@@ -146,35 +152,6 @@ async function readJsonBody(request) {
     const parseError = new Error("Nao foi possivel ler os dados da prova.");
     parseError.statusCode = 400;
     throw parseError;
-  }
-}
-
-async function notifyResultOwner(submission) {
-  try {
-    if (hasMicrosoftGraphConfig()) {
-      return await sendWithMicrosoftGraph(submission);
-    }
-
-    if (process.env.RESEND_API_KEY) {
-      return await sendWithResend(submission);
-    }
-
-    if (process.env.RESULT_WEBHOOK_URL) {
-      return await sendToWebhook(submission);
-    }
-
-    return {
-      sent: false,
-      channel: "local",
-      message:
-        "Resultado salvo localmente. Configure Microsoft Graph, RESEND_API_KEY ou RESULT_WEBHOOK_URL para envio externo automatico.",
-    };
-  } catch (error) {
-    return {
-      sent: false,
-      channel: "error",
-      message: error.message,
-    };
   }
 }
 
@@ -312,166 +289,6 @@ function resultTitleFromRates(closedRate, openRate) {
   if (combinedRate >= 85) return "Excelente criterio tecnico";
   if (combinedRate >= 70) return "Bom desempenho";
   return "Revisao recomendada";
-}
-
-function hasMicrosoftGraphConfig() {
-  return Boolean(
-    process.env.MS_GRAPH_TENANT_ID &&
-      process.env.MS_GRAPH_CLIENT_ID &&
-      process.env.MS_GRAPH_CLIENT_SECRET &&
-      process.env.MS_GRAPH_SENDER
-  );
-}
-
-async function sendWithMicrosoftGraph(submission) {
-  const token = await getMicrosoftGraphToken();
-  const sender = encodeURIComponent(process.env.MS_GRAPH_SENDER);
-  const response = await fetch(`https://graph.microsoft.com/v1.0/users/${sender}/sendMail`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      message: {
-        subject: `Resultado da prova SDR - ${submission.candidate.name}`,
-        body: {
-          contentType: "Text",
-          content: buildOwnerEmailText(submission),
-        },
-        toRecipients: [
-          {
-            emailAddress: {
-              address: submission.recipient,
-            },
-          },
-        ],
-      },
-      saveToSentItems: true,
-    }),
-  });
-
-  if (response.status !== 202) {
-    const body = await response.text();
-    throw new Error(`Microsoft Graph retornou HTTP ${response.status}: ${body || "sem corpo"}`);
-  }
-
-  return {
-    sent: true,
-    channel: "microsoft-graph",
-    message: "Email automatico enviado pelo Microsoft Exchange.",
-  };
-}
-
-async function getMicrosoftGraphToken() {
-  const params = new URLSearchParams({
-    client_id: process.env.MS_GRAPH_CLIENT_ID,
-    client_secret: process.env.MS_GRAPH_CLIENT_SECRET,
-    scope: "https://graph.microsoft.com/.default",
-    grant_type: "client_credentials",
-  });
-
-  const response = await fetch(`https://login.microsoftonline.com/${process.env.MS_GRAPH_TENANT_ID}/oauth2/v2.0/token`, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: params,
-  });
-  const body = await response.json().catch(() => ({}));
-
-  if (!response.ok || !body.access_token) {
-    throw new Error(body.error_description || body.error || "Falha ao obter token Microsoft Graph.");
-  }
-
-  return body.access_token;
-}
-
-async function sendWithResend(submission) {
-  const from = process.env.RESULT_FROM_EMAIL || "Totall Prova SDR <onboarding@resend.dev>";
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from,
-      to: [submission.recipient],
-      subject: `Resultado da prova SDR - ${submission.candidate.name}`,
-      text: buildOwnerEmailText(submission),
-    }),
-  });
-
-  const body = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    throw new Error(body.message || "Falha no envio pelo Resend.");
-  }
-
-  return {
-    sent: true,
-    channel: "resend",
-    message: "Email automatico enviado.",
-    providerId: body.id,
-  };
-}
-
-async function sendToWebhook(submission) {
-  const response = await fetch(process.env.RESULT_WEBHOOK_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(submission),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Webhook retornou HTTP ${response.status}.`);
-  }
-
-  return {
-    sent: true,
-    channel: "webhook",
-    message: "Webhook automatico acionado.",
-  };
-}
-
-function buildOwnerEmailText(submission) {
-  const result = submission.exam.result;
-  const answers = submission.answers
-    .map((answer) => {
-      const value = answer.type === "closed" ? `${answer.selectedLabel}) ${answer.selectedText}` : answer.answer;
-      const evaluation = answer.evaluation
-        ? `\n   Avaliacao aberta: ${answer.evaluation.score}/${answer.evaluation.total} - ${openEvaluationFeedback(answer.evaluation)}`
-        : "";
-      return `${answer.id}. ${value}${evaluation}`;
-    })
-    .join("\n\n");
-
-  return [
-    "Prova de Conhecimentos SDR - Totall",
-    "",
-    `Protocolo: ${submission.id}`,
-    `Recebido em: ${submission.receivedAt}`,
-    `Candidato: ${submission.candidate.name}`,
-    `Email do candidato: ${submission.candidate.email || "Nao informado"}`,
-    `Data da prova: ${submission.exam.date || "Nao informada"}`,
-    `Avaliador: ${submission.exam.reviewer || "Nao informado"}`,
-    "",
-    `Resultado: ${submission.exam.title}`,
-    `Questoes fechadas: ${result.correctClosed}/${result.closedTotal} (${result.closedRate}%)`,
-    `Abertas preenchidas: ${result.completedOpen}/${result.openTotal}`,
-    result.openEvaluation
-      ? `Avaliacao abertas: ${result.openEvaluation.score}/${result.openEvaluation.total} (${result.openEvaluation.rate}%)`
-      : "",
-    "",
-    "Respostas:",
-    answers,
-  ]
-    .filter((line) => line !== "")
-    .join("\n");
-}
-
-function openEvaluationFeedback(item) {
-  if (item.rate >= 80) return `Resposta forte. Cobre: ${(item.strengths || []).join(", ")}.`;
-  if (item.rate >= 50) return `Resposta razoavel. Reforcar: ${(item.missing || []).slice(0, 2).join(", ")}.`;
-  return `Resposta fraca ou generica. Faltou: ${(item.missing || []).slice(0, 3).join(", ")}.`;
 }
 
 function loadDotEnv(filePath) {
