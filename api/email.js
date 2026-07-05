@@ -182,18 +182,7 @@ async function sendToWebhook(submission, env = process.env) {
 
 function buildOwnerEmailText(submission) {
   const result = submission.exam.result;
-  const answers = submission.answers
-    .map((answer) => {
-      const value =
-        answer.type === "closed" || answer.type === "diagnostic"
-          ? `${answer.selectedLabel}) ${answer.selectedText}${answer.answer ? ` | ${answer.answer}` : ""}`
-          : answer.answer;
-      const evaluation = answer.evaluation
-        ? `\n   Avaliacao aberta: ${answer.evaluation.score}/${answer.evaluation.total} - ${openEvaluationFeedback(answer.evaluation)}`
-        : "";
-      return `${answer.id}. ${value}${evaluation}`;
-    })
-    .join("\n\n");
+  const answers = buildSubmissionAnswerReport(submission);
 
   return [
     "Avaliacao de Calibracao SDR - Totall",
@@ -211,11 +200,50 @@ function buildOwnerEmailText(submission) {
     result.openEvaluation
       ? `Avaliacao abertas: ${result.openEvaluation.score}/${result.openEvaluation.total} (${result.openEvaluation.rate}%)`
       : "",
+    result.openEvaluation?.summary ? `Resumo das abertas: ${result.openEvaluation.summary}` : "",
     "",
-    "Respostas:",
+    "Respostas completas:",
     answers,
   ]
     .filter((line) => line !== "")
+    .join("\n");
+}
+
+function buildSubmissionAnswerReport(submission) {
+  const sections = submission.exam.sections || [];
+  const knownSectionIds = new Set(sections.map((section) => section.id));
+  const sectionBlocks = sections.map((section) => {
+    const answers = submission.answers.filter((answer) => answer.sectionId === section.id);
+    return [`BLOCO ${section.id} - ${section.title}`, ...answers.map(formatSubmissionAnswer)].join("\n\n");
+  });
+
+  const ungrouped = submission.answers.filter((answer) => !knownSectionIds.has(answer.sectionId));
+  if (ungrouped.length) {
+    sectionBlocks.push(["RESPOSTAS", ...ungrouped.map(formatSubmissionAnswer)].join("\n\n"));
+  }
+
+  return sectionBlocks.join("\n\n");
+}
+
+function formatSubmissionAnswer(answer) {
+  const value =
+    answer.type === "closed" || answer.type === "diagnostic"
+      ? `${answer.selectedLabel || "-"}) ${answer.selectedText || "Sem resposta"}${answer.answer ? ` | ${answer.answer}` : ""}`
+      : answer.answer || "Sem resposta";
+  const status =
+    answer.type === "closed"
+      ? answer.correct
+        ? "Correta"
+        : "Incorreta"
+      : answer.type === "diagnostic"
+        ? "Autodiagnostico"
+        : "";
+  const evaluation = answer.evaluation
+    ? `Avaliacao aberta: ${answer.evaluation.score}/${answer.evaluation.total} - ${openEvaluationFeedback(answer.evaluation)}`
+    : "";
+
+  return [`${answer.id}. ${answer.title}`, `Resposta: ${value}`, status ? `Status: ${status}` : "", evaluation]
+    .filter(Boolean)
     .join("\n");
 }
 

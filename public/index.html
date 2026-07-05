@@ -93,7 +93,7 @@
             <div class="result-grid">
               <div>
                 <span>Questoes fechadas</span>
-                <strong id="closedScore">0/7</strong>
+                <strong id="closedScore">0/15</strong>
               </div>
               <div>
                 <span>Aproveitamento</span>
@@ -101,7 +101,7 @@
               </div>
               <div>
                 <span>Abertas preenchidas</span>
-                <strong id="openCompletion">0/8</strong>
+                <strong id="openCompletion">0/6</strong>
               </div>
               <div>
                 <span>Avaliacao abertas</span>
@@ -114,16 +114,16 @@
               <strong>Envio automatico</strong>
               <span>Ao finalizar, o resultado e enviado para Rodrigo e fica registrado no servidor.</span>
             </div>
+            <div class="result-actions" id="resultActions" hidden>
+              <button class="secondary" type="button" id="emailButton" hidden>Enviar por email</button>
+              <button class="secondary" type="button" id="printButton" hidden>Imprimir</button>
+            </div>
           </section>
 
           <p class="finish-status" id="finishStatus" role="status"></p>
 
           <div class="action-bar">
-            <button class="secondary" type="button" id="clearButton">Limpar</button>
-            <button class="secondary" type="button" id="copyButton">Copiar resultado</button>
-            <button class="secondary" type="button" id="emailButton">Enviar por email</button>
-            <button class="secondary" type="button" id="printButton">Imprimir</button>
-            <button class="secondary" type="button" id="previousSectionButton">Voltar bloco</button>
+            <button class="secondary" type="button" id="previousSectionButton">Voltar</button>
             <button class="primary" type="button" id="sectionActionButton">Finalizar bloco e avancar</button>
           </div>
         </form>

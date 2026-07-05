@@ -337,8 +337,6 @@ function bindEvents() {
   });
   document.getElementById("candidateForm").addEventListener("input", updateProgress);
   document.getElementById("examForm").addEventListener("submit", handleSubmit);
-  document.getElementById("clearButton").addEventListener("click", clearExam);
-  document.getElementById("copyButton").addEventListener("click", copyResult);
   document.getElementById("emailButton").addEventListener("click", sendCandidateCopyEmail);
   document.getElementById("printButton").addEventListener("click", () => window.print());
   document.getElementById("previousSectionButton").addEventListener("click", goToPreviousSection);
@@ -668,9 +666,16 @@ function canOpenSection(targetIndex) {
 function updateSectionControls() {
   const previousButton = document.getElementById("previousSectionButton");
   const actionButton = document.getElementById("sectionActionButton");
-  previousButton.disabled = state.currentSection === 0 || state.submitted;
+  const resultActions = document.getElementById("resultActions");
+  const emailButton = document.getElementById("emailButton");
+  const printButton = document.getElementById("printButton");
+  previousButton.hidden = state.currentSection === 0 || state.submitted;
+  previousButton.disabled = state.submitted;
   actionButton.textContent = isLastSection() ? "Finalizar prova" : "Finalizar bloco e avancar";
   actionButton.hidden = state.submitted;
+  resultActions.hidden = !state.submitted;
+  emailButton.hidden = !state.submitted;
+  printButton.hidden = !state.submitted;
 }
 
 function goToPreviousSection() {
@@ -730,23 +735,25 @@ async function copyResult() {
   const payload = buildResultText();
   try {
     await navigator.clipboard.writeText(payload);
-    flashButton("copyButton", "Copiado");
   } catch (error) {
-    flashButton("copyButton", "Nao copiado");
+    // Clipboard is optional now; printing and email are the visible result actions.
   }
 }
 
 function buildResultText() {
   saveCurrentSectionValues();
-  const result = calculateResult();
+  const result = state.submission?.result || calculateResult();
   const candidate = document.getElementById("candidateName").value.trim() || "Nao informado";
   const email = document.getElementById("resultEmail").value.trim() || "Nao informado";
   const date = document.getElementById("examDate").value || "Nao informada";
   const reviewer = document.getElementById("reviewerName").value.trim() || "Nao informado";
-  const answers = questions.map((question) => `${question.id}. ${answerText(question)}`).join("\n");
+  const protocol = state.submission?.id || "Nao registrado";
+  const answers = buildFullAnswerReport(result);
 
   return [
     "Avaliacao de Calibracao SDR - Totall",
+    "",
+    `Protocolo: ${protocol}`,
     `Candidato: ${candidate}`,
     `Email: ${email}`,
     `Data: ${date}`,
@@ -760,6 +767,7 @@ function buildResultText() {
       (item) => `Questao ${item.id}: ${item.score}/${item.total} - ${openEvaluationFeedback(item)}`
     ),
     "",
+    "Respostas completas:",
     answers,
   ].join("\n");
 }
@@ -839,6 +847,40 @@ function answerText(question) {
   return String(value || "Sem resposta").trim();
 }
 
+function buildFullAnswerReport(result) {
+  return sections
+    .map((section) => {
+      const lines = section.questions.map((question) => formatQuestionReport(question, result));
+      return [`${section.shortTitle.toUpperCase()} - ${section.title}`, ...lines].join("\n\n");
+    })
+    .join("\n\n");
+}
+
+function formatQuestionReport(question, result) {
+  const answer = answerText(question);
+  const evaluation = result.openEvaluation.items.find((item) => item.id === question.id);
+  const status =
+    question.type === "closed"
+      ? Number(getAnswerValue(question.id)) === question.answer
+        ? "Correta"
+        : `Incorreta. Resposta esperada: ${letterLabels[question.answer]}) ${question.options[question.answer]}`
+      : question.type === "diagnostic"
+        ? "Autodiagnostico"
+        : "";
+  const evaluationLine = evaluation
+    ? `Avaliacao aberta: ${evaluation.score}/${evaluation.total} - ${openEvaluationFeedback(evaluation)}`
+    : "";
+
+  return [
+    `${question.id}. ${question.title}`,
+    `Resposta: ${answer}`,
+    status ? `Status: ${status}` : "",
+    evaluationLine,
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
 function renderSubmissionStatus(submission) {
   if (submission?.notification?.sent) {
     setEmailStatus("Resultado enviado para Rodrigo", `Destino: ${submission.recipient || ownerEmail}. Protocolo ${submission.id}.`);
@@ -871,7 +913,7 @@ function sendCandidateCopyEmail() {
   }
 
   const candidate = document.getElementById("candidateName").value.trim() || "candidato";
-  const subject = `Resultado da prova SDR - ${candidate}`;
+  const subject = `Resultado da avaliacao SDR - ${candidate}`;
   const body = buildEmailText();
   const mailto = `mailto:${encodeURIComponent(recipient)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 
@@ -881,32 +923,7 @@ function sendCandidateCopyEmail() {
 }
 
 function buildEmailText() {
-  saveCurrentSectionValues();
-  const result = calculateResult();
-  const candidate = document.getElementById("candidateName").value.trim() || "Nao informado";
-  const email = document.getElementById("resultEmail").value.trim() || "Nao informado";
-  const date = document.getElementById("examDate").value || "Nao informada";
-  const reviewer = document.getElementById("reviewerName").value.trim() || "Nao informado";
-  const title = document.getElementById("resultTitle").textContent || "Resultado";
-  const feedback = document.getElementById("resultFeedback").textContent || "";
-
-  return [
-    "Avaliacao de Calibracao SDR - Totall",
-    "",
-    `Candidato: ${candidate}`,
-    `Email: ${email}`,
-    `Data: ${date}`,
-    `Avaliador: ${reviewer}`,
-    "",
-    `Resultado: ${title}`,
-    `Questoes fechadas: ${result.correctClosed}/${result.closedTotal} (${result.closedRate}%)`,
-    `Abertas preenchidas: ${result.completedOpen}/${result.openTotal}`,
-    `Avaliacao abertas: ${result.openEvaluation.score}/${result.openEvaluation.total} (${result.openEvaluation.rate}%)`,
-    "",
-    feedback,
-    "",
-    "Observacao: as respostas completas ficam disponiveis no botao Copiar resultado ou na impressao da prova.",
-  ].join("\n");
+  return buildResultText();
 }
 
 function resultTitleFromRate(rate) {
