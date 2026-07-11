@@ -1,0 +1,35 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/teams/v1.19/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.19",
+  "version": "1.0.0",
+  "id": "3f8e9380-9c6d-4dd3-a0c5-7d6735d8425f",
+  "developer": {
+    "name": "Totall Propriedade Intelectual",
+    "websiteUrl": "{{APP_URL}}",
+    "privacyUrl": "{{APP_URL}}",
+    "termsOfUseUrl": "{{APP_URL}}"
+  },
+  "name": {
+    "short": "Hub CFO",
+    "full": "Totall Hub CFO"
+  },
+  "description": {
+    "short": "Solicitacoes e relatorios CFO conectados ao Monday.",
+    "full": "Painel interno da Totall para criar solicitacoes e consultar relatorios do Hub CFO integrados ao board do Monday."
+  },
+  "icons": {
+    "outline": "outline.png",
+    "color": "color.png"
+  },
+  "accentColor": "#004653",
+  "staticTabs": [
+    {
+      "entityId": "totall-hub-cfo",
+      "name": "Hub CFO",
+      "contentUrl": "{{APP_URL}}",
+      "websiteUrl": "{{APP_URL}}",
+      "scopes": ["team", "groupChat", "personal"]
+    }
+  ],
+  "validDomains": ["{{APP_DOMAIN}}"]
+}

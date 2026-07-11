@@ -3,130 +3,126 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Prova Online SDR - Totall Propriedade Intelectual</title>
+    <title>Totall Hub CFO - Monday</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="#candidateName" aria-label="Totall Propriedade Intelectual">
+      <a class="brand" href="/" aria-label="Totall Propriedade Intelectual">
         <img src="/totall-logo.png" alt="Totall Propriedade Intelectual" />
       </a>
-      <div class="exam-meta">
-        <span>Prova online</span>
-        <strong>Conhecimentos SDR</strong>
+      <div class="board-meta">
+        <span id="connectionStatus">Conectando ao Monday...</span>
+        <a href="https://totall.monday.com/boards/18421402809" target="_blank" rel="noreferrer">Abrir board</a>
       </div>
     </header>
 
     <main>
-      <section class="intro">
-        <div class="intro-copy">
-          <p class="eyebrow">Selecao comercial</p>
-          <h1>Avaliacao de Calibracao SDR</h1>
-          <p>
-            Avaliacao online para calibrar recepcao de inbound, qualificacao, leitura de
-            oportunidades em PI, rotina de CRM e passagem para closer.
-          </p>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Hub CFO</p>
+          <h1>Demandas conectadas ao Monday</h1>
         </div>
+      </section>
 
-        <form class="candidate-card" id="candidateForm">
-          <label>
-            Nome do candidato
-            <input id="candidateName" name="candidateName" autocomplete="name" required />
+      <nav class="tabs" aria-label="Areas do painel">
+        <button class="tab is-active" type="button" data-tab="request">Solicitacao</button>
+        <button class="tab" type="button" data-tab="reports">Relatorios</button>
+      </nav>
+
+      <section class="tab-panel is-active" id="requestPanel">
+        <form class="quick-form" id="quickForm">
+          <div class="form-head">
+            <p class="eyebrow">Novo elemento</p>
+            <h2>Adicionar demanda em ATIVIDADES</h2>
+          </div>
+
+          <label class="wide">
+            Titulo da demanda
+            <input id="requestName" name="name" required maxlength="180" placeholder="Ex.: Revisar fluxo financeiro do projeto X" />
           </label>
+
           <label>
-            Email do candidato para copia
-            <input
-              id="resultEmail"
-              name="resultEmail"
-              type="email"
-              autocomplete="email"
-              placeholder="Opcional"
-            />
+            Tipo
+            <select name="type">
+              <option>Atividade</option>
+              <option>Projeto</option>
+            </select>
           </label>
+
           <label>
-            Data
-            <input id="examDate" name="examDate" type="date" required />
+            Status inicial
+            <select name="status">
+              <option>Em progresso</option>
+              <option>Parado</option>
+              <option>Stand by</option>
+            </select>
           </label>
+
           <label>
-            Avaliador
-            <input id="reviewerName" name="reviewerName" placeholder="Opcional" />
+            Prazo
+            <input name="dueDate" type="date" />
           </label>
+
+          <label>
+            Responsavel pela demanda (R)
+            <select name="responsibleId" id="responsibleSelect" required>
+              <option value="">Carregando usuarios...</option>
+            </select>
+          </label>
+
+          <label class="wide">
+            Observacao inicial
+            <textarea name="note" rows="5" placeholder="Contexto, responsaveis, criterio de sucesso ou proximo passo."></textarea>
+          </label>
+
+          <div class="actions wide">
+            <p id="quickStatus" role="status"></p>
+            <button class="primary" type="submit">Criar no Monday</button>
+          </div>
         </form>
       </section>
 
-      <section class="exam-shell" aria-label="Prova de conhecimentos">
-        <aside class="sidebar">
-          <div class="score-panel">
-            <p class="eyebrow">Andamento</p>
-            <strong id="answeredCount">0/22</strong>
-            <div class="progress-track" aria-hidden="true">
-              <div id="progressBar"></div>
-            </div>
-            <span id="progressLabel">Comece pela identificacao do candidato.</span>
+      <section class="tab-panel" id="reportsPanel">
+        <div class="report-toolbar">
+          <label>
+            Buscar
+            <input id="reportSearchInput" placeholder="Titulo, status, responsavel ou grupo" />
+          </label>
+          <label>
+            Status
+            <select id="reportStatusFilter">
+              <option value="">Todos</option>
+              <option>Em progresso</option>
+              <option>Parado</option>
+              <option>Stand by</option>
+              <option>Feito</option>
+            </select>
+          </label>
+          <button class="secondary" type="button" id="refreshButton">Atualizar</button>
+        </div>
+
+        <div class="report-grid" id="reportGrid" aria-live="polite"></div>
+        <div class="report-table-card">
+          <div class="report-card-head">
+            <p class="eyebrow">Demandas</p>
+            <h2>Visao consolidada</h2>
           </div>
-
-          <div class="rubric">
-            <h2>Rubrica</h2>
-            <ul>
-              <li>Recepcao consultiva antes de falar preco.</li>
-              <li>Qualificacao com contexto, urgencia, decisor e proximo passo.</li>
-              <li>Leitura de oportunidades em marca, software e demandas adjacentes.</li>
-              <li>Registro claro no CRM e passagem de bastao util ao closer.</li>
-            </ul>
+          <div class="report-table-wrap">
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th>Demanda</th>
+                  <th>Status</th>
+                  <th>Responsavel</th>
+                  <th>Prazo</th>
+                  <th>Grupo</th>
+                </tr>
+              </thead>
+              <tbody id="reportTableBody"></tbody>
+            </table>
           </div>
-        </aside>
-
-        <form class="question-list" id="examForm">
-          <nav class="section-tabs" id="sectionTabs" aria-label="Blocos da prova"></nav>
-
-          <section class="section-panel">
-            <p class="eyebrow" id="sectionEyebrow">Bloco 1</p>
-            <h2 id="sectionTitle">Recepcao e qualificacao de leads</h2>
-            <p id="sectionDescription"></p>
-          </section>
-
-          <div id="questions"></div>
-
-          <section class="result-card" id="resultCard" hidden>
-            <p class="eyebrow">Resultado automatico</p>
-            <h2 id="resultTitle">Resultado</h2>
-            <div class="result-grid">
-              <div>
-                <span>Questoes fechadas</span>
-                <strong id="closedScore">0/15</strong>
-              </div>
-              <div>
-                <span>Aproveitamento</span>
-                <strong id="closedRate">0%</strong>
-              </div>
-              <div>
-                <span>Abertas preenchidas</span>
-                <strong id="openCompletion">0/6</strong>
-              </div>
-              <div>
-                <span>Avaliacao abertas</span>
-                <strong id="openScore">0%</strong>
-              </div>
-            </div>
-            <p id="resultFeedback"></p>
-            <div class="open-evaluation" id="openEvaluation"></div>
-            <div class="email-status" id="emailStatus">
-              <strong>Envio automatico</strong>
-              <span>Ao finalizar, o resultado e enviado para Rodrigo e fica registrado no servidor.</span>
-            </div>
-            <div class="result-actions" id="resultActions" hidden>
-              <button class="secondary" type="button" id="emailButton" hidden>Enviar por email</button>
-              <button class="secondary" type="button" id="printButton" hidden>Imprimir</button>
-            </div>
-          </section>
-
-          <p class="finish-status" id="finishStatus" role="status"></p>
-
-          <div class="action-bar">
-            <button class="secondary" type="button" id="previousSectionButton">Voltar</button>
-            <button class="primary" type="button" id="sectionActionButton">Finalizar bloco e avancar</button>
-          </div>
-        </form>
+        </div>
       </section>
     </main>
 

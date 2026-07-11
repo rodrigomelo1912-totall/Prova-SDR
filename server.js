@@ -12,6 +12,8 @@ const PORT = Number(process.env.PORT || 3000);
 const PUBLIC_DIR = path.join(__dirname, "public");
 const RESULTS_DIR = path.join(__dirname, "data", "submissions");
 const OWNER_EMAIL = DEFAULT_OWNER_EMAIL;
+const MONDAY_API_URL = "https://api.monday.com/v2";
+const MONDAY_BOARD_ID = process.env.MONDAY_BOARD_ID || "18421402809";
 
 const MIME_TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -40,6 +42,38 @@ const server = http.createServer(async (request, response) => {
       return;
     }
 
+    if (url.pathname === "/api/monday/board" && request.method === "GET") {
+      sendJson(response, 200, await getMondayBoard());
+      return;
+    }
+
+    if (url.pathname === "/api/monday/users" && request.method === "GET") {
+      sendJson(response, 200, await listMondayUsers());
+      return;
+    }
+
+    if (url.pathname === "/api/monday/items" && request.method === "GET") {
+      sendJson(response, 200, await listMondayItems());
+      return;
+    }
+
+    if (url.pathname === "/api/monday/items" && request.method === "POST") {
+      sendJson(response, 201, await createMondayItem(await readJsonBody(request)));
+      return;
+    }
+
+    const mondayItemMatch = url.pathname.match(/^\/api\/monday\/items\/(\d+)$/);
+    if (mondayItemMatch && request.method === "PATCH") {
+      sendJson(response, 200, await updateMondayItem(mondayItemMatch[1], await readJsonBody(request)));
+      return;
+    }
+
+    const mondayUpdateMatch = url.pathname.match(/^\/api\/monday\/items\/(\d+)\/updates$/);
+    if (mondayUpdateMatch && request.method === "POST") {
+      sendJson(response, 201, await addMondayUpdate(mondayUpdateMatch[1], await readJsonBody(request)));
+      return;
+    }
+
     if (url.pathname === "/api/results" && request.method === "POST") {
       const submission = await receiveResultSubmission(request);
       sendJson(response, 200, submission);
@@ -64,7 +98,7 @@ const server = http.createServer(async (request, response) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Prova online Totall rodando em http://localhost:${PORT}`);
+  console.log(`Totall Hub CFO rodando em http://localhost:${PORT}`);
 });
 
 function resolveStaticPath(urlPath) {
@@ -84,6 +118,312 @@ function sendJson(response, status, payload) {
 function sendText(response, status, text) {
   response.writeHead(status, { "Content-Type": "text/plain; charset=utf-8" });
   response.end(text);
+}
+
+async function getMondayBoard() {
+  const query = `query($ids:[ID!]) {
+    boards(ids:$ids) {
+      id
+      name
+      groups { id title }
+      columns { id title type settings_str }
+    }
+  }`;
+  const data = await mondayRequest(query, { ids: [MONDAY_BOARD_ID] });
+  const board = data.boards?.[0];
+  if (!board) {
+    const error = new Error("Board do Monday nao encontrado.");
+    error.statusCode = 404;
+    throw error;
+  }
+
+  return {
+    ...board,
+    columns: board.columns.map((column) => ({
+      ...column,
+      settings: parseJson(column.settings_str, {}),
+      settings_str: undefined,
+    })),
+    defaults: mondayDefaults(board),
+  };
+}
+
+async function listMondayItems() {
+  const query = `query($ids:[ID!]) {
+    boards(ids:$ids) {
+      id
+      name
+      groups { id title }
+      columns { id title type settings_str }
+      items_page(limit: 100) {
+        items {
+          id
+          name
+          group { id title }
+          updated_at
+          column_values {
+            id
+            text
+            value
+            type
+            column { title }
+          }
+        }
+      }
+    }
+  }`;
+  const data = await mondayRequest(query, { ids: [MONDAY_BOARD_ID] });
+  const board = data.boards?.[0];
+  if (!board) return { board: null, items: [] };
+
+  return {
+    board: {
+      id: board.id,
+      name: board.name,
+      groups: board.groups,
+      columns: board.columns.map((column) => ({
+        ...column,
+        settings: parseJson(column.settings_str, {}),
+        settings_str: undefined,
+      })),
+      defaults: mondayDefaults(board),
+    },
+    items: board.items_page.items.map(formatMondayItem),
+  };
+}
+
+async function listMondayUsers() {
+  const query = `query($ids:[ID!]) {
+    boards(ids:$ids) {
+      subscribers { id name email enabled }
+    }
+    users(limit: 100) { id name email enabled }
+  }`;
+  const data = await mondayRequest(query, { ids: [MONDAY_BOARD_ID] });
+  const subscriberIds = new Set((data.boards?.[0]?.subscribers || []).map((user) => String(user.id)));
+  const users = (data.users || [])
+    .filter((user) => user.enabled !== false)
+    .map((user) => ({
+      id: String(user.id),
+      name: user.name,
+      email: user.email,
+      isBoardSubscriber: subscriberIds.has(String(user.id)),
+    }))
+    .sort((a, b) => Number(b.isBoardSubscriber) - Number(a.isBoardSubscriber) || a.name.localeCompare(b.name, "pt-BR"));
+
+  return { users };
+}
+
+async function createMondayItem(payload) {
+  const board = await getMondayBoard();
+  const defaults = board.defaults;
+  const itemName = cleanText(payload.name, 180);
+  if (!itemName) {
+    const error = new Error("Informe um titulo para criar a demanda.");
+    error.statusCode = 400;
+    throw error;
+  }
+  if (!/^\d+$/.test(String(payload.responsibleId || ""))) {
+    const error = new Error("Selecione o responsavel da demanda na coluna R.");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const columnValues = buildMondayColumnValues(payload);
+  const mutation = `mutation($boardId: ID!, $groupId: String!, $itemName: String!, $columnValues: JSON!) {
+    create_item(board_id: $boardId, group_id: $groupId, item_name: $itemName, column_values: $columnValues) {
+      id
+      name
+    }
+  }`;
+  const data = await mondayRequest(mutation, {
+    boardId: MONDAY_BOARD_ID,
+    groupId: payload.groupId || defaults.activeGroupId,
+    itemName,
+    columnValues: JSON.stringify(columnValues),
+  });
+
+  if (payload.note) {
+    await addMondayUpdate(data.create_item.id, { body: payload.note });
+  }
+
+  return { ok: true, item: data.create_item };
+}
+
+async function updateMondayItem(itemId, payload) {
+  const columnValues = buildMondayColumnValues(payload);
+  if (Object.keys(columnValues).length) {
+    const mutation = `mutation($boardId: ID!, $itemId: ID!, $columnValues: JSON!) {
+      change_multiple_column_values(board_id: $boardId, item_id: $itemId, column_values: $columnValues) {
+        id
+      }
+    }`;
+    await mondayRequest(mutation, {
+      boardId: MONDAY_BOARD_ID,
+      itemId,
+      columnValues: JSON.stringify(columnValues),
+    });
+  }
+
+  if (payload.groupId) {
+    const mutation = `mutation($itemId: ID!, $groupId: String!) {
+      move_item_to_group(item_id: $itemId, group_id: $groupId) { id }
+    }`;
+    await mondayRequest(mutation, { itemId, groupId: payload.groupId });
+  }
+
+  if (payload.note) {
+    await addMondayUpdate(itemId, { body: payload.note });
+  }
+
+  return { ok: true, itemId };
+}
+
+async function addMondayUpdate(itemId, payload) {
+  const body = cleanText(payload.body || payload.note, 4000);
+  if (!body) {
+    const error = new Error("Escreva uma atualizacao antes de enviar.");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const mutation = `mutation($itemId: ID!, $body: String!) {
+    create_update(item_id: $itemId, body: $body) { id body created_at }
+  }`;
+  const data = await mondayRequest(mutation, { itemId, body });
+  return { ok: true, update: data.create_update };
+}
+
+function buildMondayColumnValues(payload) {
+  const values = {};
+  setStatusValue(values, "status", payload.status);
+  setStatusValue(values, "color_mkt2c2q2", payload.type);
+  setStatusValue(values, "label_mkmyvsg5", payload.tendency);
+  setDateValue(values, "data_mkmxbvwx", payload.dueDate);
+  setNumberValue(values, "dura__o_mkmxz7sk", payload.duration);
+  setNumberValue(values, "n_meros_mkmxfyjm", payload.gravity);
+  setNumberValue(values, "dup__of_g_mkmx8sc8", payload.urgency);
+  setNumberValue(values, "dup__of_dup__of_g_mkmxjxm3", payload.trend);
+  setNumberValue(values, "n_meros7__1", payload.projectBudget);
+  setPeopleValue(values, "multiple_person_mkq0vh7d", payload.responsibleId);
+  if (payload.timelineStart || payload.timelineEnd) {
+    values.cronograma_mkmxw705 = {
+      from: payload.timelineStart || payload.dueDate || null,
+      to: payload.timelineEnd || payload.dueDate || payload.timelineStart || null,
+    };
+  }
+  return values;
+}
+
+function setPeopleValue(values, columnId, personId) {
+  const id = String(personId || "").trim();
+  if (/^\d+$/.test(id)) {
+    values[columnId] = { personsAndTeams: [{ id: Number(id), kind: "person" }] };
+  }
+}
+
+function setStatusValue(values, columnId, label) {
+  const safeLabel = cleanText(label, 80);
+  if (safeLabel) values[columnId] = { label: safeLabel };
+}
+
+function setDateValue(values, columnId, date) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(String(date || ""))) {
+    values[columnId] = { date };
+  }
+}
+
+function setNumberValue(values, columnId, number) {
+  if (number === undefined || number === null || number === "") return;
+  const parsed = Number(number);
+  if (Number.isFinite(parsed)) values[columnId] = parsed;
+}
+
+async function mondayRequest(query, variables) {
+  if (!process.env.MONDAY_API_TOKEN) {
+    const error = new Error("Configure MONDAY_API_TOKEN no arquivo .env.");
+    error.statusCode = 500;
+    throw error;
+  }
+
+  const response = await fetch(MONDAY_API_URL, {
+    method: "POST",
+    headers: {
+      Authorization: process.env.MONDAY_API_TOKEN,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ query, variables }),
+  });
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok || body.errors) {
+    const error = new Error(body.errors?.[0]?.message || body.error_message || `Monday retornou HTTP ${response.status}`);
+    error.statusCode = response.ok ? 400 : response.status;
+    error.details = body;
+    throw error;
+  }
+  return body.data;
+}
+
+function formatMondayItem(item) {
+  const values = Object.fromEntries(
+    item.column_values.map((value) => [
+      value.id,
+      {
+        id: value.id,
+        title: value.column?.title || value.id,
+        type: value.type,
+        text: value.text || "",
+        value: parseJson(value.value, null),
+      },
+    ])
+  );
+
+  return {
+    id: item.id,
+    name: item.name,
+    group: item.group,
+    updatedAt: item.updated_at,
+    status: values.status?.text || "",
+    type: values.color_mkt2c2q2?.text || "",
+    dueDate: values.data_mkmxbvwx?.text || "",
+    tendency: values.label_mkmyvsg5?.text || "",
+    responsible: values.multiple_person_mkq0vh7d?.text || "",
+    duration: values.dura__o_mkmxz7sk?.text || "",
+    gravity: values.n_meros_mkmxfyjm?.text || "",
+    urgency: values.dup__of_g_mkmx8sc8?.text || "",
+    trend: values.dup__of_dup__of_g_mkmxjxm3?.text || "",
+    gut: values.f_rmula_mkmxwr7q?.text || "",
+    columns: values,
+  };
+}
+
+function mondayDefaults(board) {
+  const groups = board.groups || [];
+  return {
+    activeGroupId: groups.find((group) => normalizeText(group.title).includes("atividades"))?.id || groups[0]?.id || "topics",
+    doneGroupId: groups.find((group) => normalizeText(group.title).includes("concluid"))?.id || "",
+    standbyGroupId: groups.find((group) => normalizeText(group.title).includes("standby"))?.id || "",
+  };
+}
+
+function cleanText(value, maxLength) {
+  return String(value || "").trim().slice(0, maxLength);
+}
+
+function parseJson(value, fallback) {
+  if (!value) return fallback;
+  try {
+    return JSON.parse(value);
+  } catch (error) {
+    return fallback;
+  }
+}
+
+function normalizeText(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
 }
 
 async function receiveResultSubmission(request) {

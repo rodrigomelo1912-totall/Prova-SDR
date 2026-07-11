@@ -1,12 +1,13 @@
 {
-  "name": "prova-sdr",
+  "name": "totall-hub-cfo",
   "version": "1.0.0",
   "private": true,
-  "description": "Prova online SDR da Totall com registro e envio automatico de resultados.",
+  "description": "Hub CFO da Totall com solicitacoes e relatorios conectados ao Monday.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check server.js && node --check public/app.js"
+    "check": "node --check server.js && node --check public/app.js && node --check scripts/build-teams-package.js",
+    "teams:package": "node scripts/build-teams-package.js"
   },
   "engines": {
     "node": ">=18"

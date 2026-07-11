@@ -1,130 +1,71 @@
-# Prova SDR
+# Totall Hub CFO
 
-Prova online de conhecimentos SDR da Totall Propriedade Intelectual.
+Painel interno para criar solicitacoes e consultar relatorios do Hub CFO, conectado ao board do Monday:
 
-O app coleta as respostas, calcula automaticamente as questoes fechadas, registra a submissao no servidor e envia o resultado para Rodrigo via email quando o Microsoft Graph/Exchange estiver configurado.
-
-As questoes abertas podem ser avaliadas por IA usando OpenAI. Quando `OPENAI_API_KEY` nao estiver configurada, o app usa uma rubrica automatica local como fallback.
+```text
+https://totall.monday.com/boards/18421402809
+```
 
 ## Rodar localmente
+
+Crie um `.env` baseado em `.env.example` e configure:
+
+```env
+MONDAY_BOARD_ID=18421402809
+MONDAY_API_TOKEN=
+```
+
+Depois rode:
 
 ```bash
 npm start
 ```
 
-Abra:
+Acesse:
 
 ```text
 http://localhost:3000
 ```
 
-## Variaveis de ambiente
-
-Crie um `.env` baseado em `.env.example`.
-
-```env
-RESULT_RECIPIENT_EMAIL=rodrigo.melo@totallpi.co
-
-MS_GRAPH_TENANT_ID=
-MS_GRAPH_CLIENT_ID=
-MS_GRAPH_CLIENT_SECRET=
-MS_GRAPH_SENDER=rodrigo.melo@totallpi.co
-
-OPENAI_API_KEY=
-OPENAI_MODEL=gpt-5.5-mini
-```
-
-Sem Microsoft Graph configurado, o app salva as provas em `data/submissions/` e libera o resultado com um protocolo local.
-
-Sem `OPENAI_API_KEY`, a avaliacao das questoes abertas usa a rubrica local.
-
-## Avaliacao por IA
-
-Para apurar as questoes abertas com IA:
-
-1. Crie uma chave de API da OpenAI.
-2. Configure `OPENAI_API_KEY` no ambiente de producao.
-3. Opcionalmente ajuste `OPENAI_MODEL`.
-
-O servidor envia apenas as perguntas abertas e respostas para a API e espera uma resposta estruturada com nota, pontos fortes, lacunas e feedback por questao.
-
-## Envio automatico por Microsoft Exchange
-
-Para envio real online:
-
-1. Crie um App Registration no Microsoft Entra ID.
-2. Adicione a permissao `Microsoft Graph > Application permissions > Mail.Send`.
-3. Conceda `Admin consent`.
-4. Crie um client secret.
-5. Configure no ambiente de producao:
-   - `MS_GRAPH_TENANT_ID`
-   - `MS_GRAPH_CLIENT_ID`
-   - `MS_GRAPH_CLIENT_SECRET`
-   - `MS_GRAPH_SENDER`
-   - `RESULT_RECIPIENT_EMAIL`
-
-O servidor usa `POST /users/{MS_GRAPH_SENDER}/sendMail` para enviar o resultado.
-
-### Por que nao usar o Outlook do Codex?
-
-O conector Outlook do Codex serve para eu criar rascunhos, ler ou enviar emails durante uma conversa assistida. Ele nao fica disponivel para visitantes do site e nao pode ser usado como backend permanente.
-
-Para candidatos externos, a estrutura correta e:
-
-```text
-Candidato -> Prova online -> Servidor Node -> Microsoft Graph -> Outlook/Exchange
-```
-
-### Diagnostico de email
-
-Com o servidor rodando, acesse:
-
-```text
-/api/email/status
-```
-
-Esse endpoint informa qual provedor esta ativo:
-
-- `microsoft-graph`: Outlook/Exchange pronto
-- `resend`: fallback transacional pronto
-- `webhook`: webhook pronto
-- `local`: nenhum envio externo configurado
-
 ## Deploy
 
-Este projeto precisa de hospedagem Node.js. GitHub Pages nao executa o servidor nem o envio de email.
+O Teams exige uma URL publica em HTTPS; `localhost` nao funciona para outros usuarios.
 
-Opcoes recomendadas:
+Este projeto ja tem `render.yaml` para deploy em Render. No ambiente de producao configure:
 
-- Render
-- Railway
-- Fly.io
-- Azure App Service
-
-O arquivo `render.yaml` ja deixa o deploy no Render preparado.
-
-### Render
-
-1. Acesse `https://dashboard.render.com/`.
-2. Conecte a conta GitHub.
-3. Crie um novo Blueprint ou Web Service apontando para `rodrigomelo1912-totall/Prova-SDR`.
-4. Configure as variaveis sensiveis:
-   - `MS_GRAPH_TENANT_ID`
-   - `MS_GRAPH_CLIENT_ID`
-   - `MS_GRAPH_CLIENT_SECRET`
-5. Faça o deploy.
-
-### Docker
-
-```bash
-docker build -t prova-sdr .
-docker run --env-file .env -p 3000:3000 prova-sdr
+```env
+MONDAY_BOARD_ID=18421402809
+MONDAY_API_TOKEN=<token do monday>
 ```
 
-### Healthcheck
+Depois do deploy, valide:
 
 ```text
-/health
+https://sua-url-publica/health
 ```
 
-Retorna um JSON simples confirmando que o servico esta online.
+## Publicar no Microsoft Teams
+
+Com a URL publica do deploy em maos, gere o pacote do app:
+
+```bash
+npm run teams:package -- https://sua-url-publica
+```
+
+O pacote sera criado em:
+
+```text
+teams/dist/totall-hub-cfo-teams.zip
+```
+
+Para disponibilizar na empresa:
+
+1. Abra o Microsoft Teams Admin Center.
+2. Acesse `Teams apps` > `Manage apps`.
+3. Use `Upload new app` e envie `teams/dist/totall-hub-cfo-teams.zip`.
+4. Permita o app para os usuarios ou politicas desejadas.
+5. Adicione o app como aba em um time/canal ou disponibilize como app pessoal.
+
+## Alternativa rapida
+
+Sem pacote de app, tambem e possivel adicionar a URL publicada como uma aba `Website` dentro de um canal do Teams. Essa opcao e mais simples, mas menos organizada para distribuir como app corporativo.

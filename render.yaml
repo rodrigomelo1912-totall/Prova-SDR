@@ -1,11 +1,15 @@
 services:
   - type: web
-    name: prova-sdr
+    name: totall-hub-cfo
     env: node
     plan: starter
     buildCommand: npm install
     startCommand: npm start
     envVars:
+      - key: MONDAY_BOARD_ID
+        value: "18421402809"
+      - key: MONDAY_API_TOKEN
+        sync: false
       - key: RESULT_RECIPIENT_EMAIL
         value: rodrigo.melo@totallpi.co
       - key: MS_GRAPH_SENDER
