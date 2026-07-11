@@ -2,7 +2,7 @@
   "$schema": "https://developer.microsoft.com/json-schemas/teams/v1.19/MicrosoftTeams.schema.json",
   "manifestVersion": "1.19",
   "version": "1.0.0",
-  "id": "3f8e9380-9c6d-4dd3-a0c5-7d6735d8425f",
+  "id": "a13d54b3-c7b1-4101-a09d-151307f0d84c",
   "developer": {
     "name": "Totall Propriedade Intelectual",
     "websiteUrl": "{{APP_URL}}",

@@ -197,19 +197,17 @@ async function listMondayUsers() {
     boards(ids:$ids) {
       subscribers { id name email enabled }
     }
-    users(limit: 100) { id name email enabled }
   }`;
   const data = await mondayRequest(query, { ids: [MONDAY_BOARD_ID] });
-  const subscriberIds = new Set((data.boards?.[0]?.subscribers || []).map((user) => String(user.id)));
-  const users = (data.users || [])
+  const users = (data.boards?.[0]?.subscribers || [])
     .filter((user) => user.enabled !== false)
     .map((user) => ({
       id: String(user.id),
       name: user.name,
       email: user.email,
-      isBoardSubscriber: subscriberIds.has(String(user.id)),
+      isBoardSubscriber: true,
     }))
-    .sort((a, b) => Number(b.isBoardSubscriber) - Number(a.isBoardSubscriber) || a.name.localeCompare(b.name, "pt-BR"));
+    .sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
 
   return { users };
 }

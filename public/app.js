@@ -211,10 +211,9 @@ function renderUserSelect(select, selectedId = "", fallbackLabel = "Selecione o 
 function userOptions(selectedId = "", fallbackLabel = "Selecione o responsavel") {
   const options = [`<option value="">${escapeHtml(fallbackLabel)}</option>`];
   for (const user of state.users) {
-    const suffix = user.isBoardSubscriber ? " - board" : "";
     options.push(
       `<option value="${escapeHtml(user.id)}" ${String(user.id) === String(selectedId) ? "selected" : ""}>${escapeHtml(
-        `${user.name}${suffix}`
+        user.name
       )}</option>`
     );
   }
