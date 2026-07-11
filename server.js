@@ -47,6 +47,11 @@ const server = http.createServer(async (request, response) => {
       return;
     }
 
+    if (url.pathname === "/api/monday/status" && request.method === "GET") {
+      sendJson(response, 200, await mondayStatus());
+      return;
+    }
+
     if (url.pathname === "/api/monday/users" && request.method === "GET") {
       sendJson(response, 200, await listMondayUsers());
       return;
@@ -210,6 +215,30 @@ async function listMondayUsers() {
     .sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
 
   return { users };
+}
+
+async function mondayStatus() {
+  const token = process.env.MONDAY_API_TOKEN || "";
+  const status = {
+    boardId: MONDAY_BOARD_ID,
+    tokenConfigured: Boolean(token.trim()),
+    tokenLength: token.trim().length,
+    authenticated: false,
+    user: null,
+    error: "",
+  };
+
+  if (!status.tokenConfigured) return status;
+
+  try {
+    const data = await mondayRequest("query { me { id name email } }", {});
+    status.authenticated = true;
+    status.user = data.me || null;
+  } catch (error) {
+    status.error = error.message;
+  }
+
+  return status;
 }
 
 async function createMondayItem(payload) {
